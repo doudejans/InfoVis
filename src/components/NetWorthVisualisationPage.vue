@@ -8,11 +8,9 @@
 export default {
   name: 'NetWorthVisualisationPage',
   props: {
-    msg: String
   },
   data() {
     return {
-      count: 0
     }
   }
 }
