@@ -4,6 +4,7 @@
 
 <script>
 import * as d3 from "d3";
+import _ from "underscore";
 
 export default {
     name: 'NetWorthMap',
@@ -14,7 +15,6 @@ export default {
         }
     },
     async mounted() {
-        console.log('hallo');
         const width = 960,
             height = 1160;
 
@@ -32,25 +32,28 @@ export default {
 
         const path = d3.geoPath().projection(projection);
 
+        const netWorth = await d3.csv('vermogen_gemeenten_modified.csv');
+        const nw2019 = netWorth.filter(n => n.Perioden == "2019JJ00").filter(n => n.KenmerkenHuishouden == "1050010");
+        const extent = d3.extent(nw2019, nw=> parseFloat(nw.GemiddeldVermogen_4));
+        const colorScale = d3.scaleSequential(d3.interpolateBlues).domain(extent);
+
         svg.selectAll(".region")
             .data(geoRegions.features)
             .enter().append("path")
             .attr("class", function(d) { return "region " + d.id; })
-            .attr("d", path);
+            .attr("d", path)
+            .attr("fill", function(d) { 
+                const meanIncome = nw2019.find(nw => nw.RegioS == d.id).GemiddeldVermogen_4;
+                return colorScale(parseFloat(meanIncome))
+            });
     }
-
 }
 </script>
 
 <style>
 path {
-  fill: none;
   stroke: #000;
   stroke-width: 0.5px;
-}
-
-.region.GM0383 {
-    fill: lightgrey;
 }
 
 </style>
