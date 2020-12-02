@@ -13,7 +13,7 @@ export default {
         return {
         }
     },
-    mounted() {
+    async mounted() {
         console.log('hallo');
         const width = 960,
             height = 1160;
@@ -22,21 +22,21 @@ export default {
             .attr("width", width)
             .attr("height", height);
 
-        d3.json("gemeente_2020.geojson").then((regions) => {
-             const projection = d3.geoMercator()
-                 .scale(10000)
-                 .center([0, 52])
-                 .rotate([-4.8, 0])
-                 .translate([width/2, height/2]);
+        const geoRegions = await d3.json("gemeente_2020.geojson");
 
-            const path = d3.geoPath().projection(projection);
+        const projection = d3.geoMercator()
+            .scale(10000)
+            .center([0, 52])
+            .rotate([-4.8, 0])
+            .translate([width/2, height/2]);
 
-            svg.selectAll(".subunit")
-                .data(regions.features)
-                .enter().append("path")
-                .attr("class", function(d) { return "region " + d.id; })
-                .attr("d", path);
-        });
+        const path = d3.geoPath().projection(projection);
+
+        svg.selectAll(".region")
+            .data(geoRegions.features)
+            .enter().append("path")
+            .attr("class", function(d) { return "region " + d.id; })
+            .attr("d", path);
     }
 
 }
