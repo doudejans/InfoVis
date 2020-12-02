@@ -1,15 +1,14 @@
 <template>
-  <img alt="Vue logo" src="./assets/logo.png" />
-  <HelloWorld msg="Hello Vue 3.0 + Vite" />
+  <NetWorthVisualisationPage />
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import NetWorthVisualisationPage from './components/NetWorthVisualisationPage.vue'
 
 export default {
   name: 'App',
   components: {
-    HelloWorld
+    NetWorthVisualisationPage
   }
 }
 </script>
