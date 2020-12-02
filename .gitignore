@@ -1,5 +1,11 @@
 *.csv
 
+
+node_modules
+.DS_Store
+dist
+*.local
+
 ### macOS ###
 # General
 .DS_Store
