@@ -42,25 +42,45 @@ export default {
                 .data(geoRegions.features)
                 .enter().append("path")
                 .attr("class", function(d) { return "region " + d.id; })
-                .attr("d", path);
+                .attr("d", path)
+                .attr("fill", "white");
+        },
+        async fillMap(municipalityMap) {
+            const svg = d3.select("#map").select("svg");
+
+            var netWorth;
+            if (municipalityMap) {
+                netWorth = await d3.csv('vermogen_gemeenten_modified.csv');
+            } else {
+                netWorth = await d3.csv('vermogen_provincies_modified.csv');
+            }
+            const nw2019 = netWorth.filter(n => n.Perioden == "2019JJ00").filter(n => n.KenmerkenHuishouden == "1050010");
+            const extent = d3.extent(nw2019, nw=> parseFloat(nw.GemiddeldVermogen_4));
+            const colorScale = d3.scaleSequential(d3.interpolateBlues).domain(extent);
+
+            svg.selectAll(".region")
+                .attr("fill", function(d) { 
+                    const meanIncome = nw2019.find(nw => nw.RegioS == d.id).GemiddeldVermogen_4;
+                    return colorScale(parseFloat(meanIncome))
+                });
         }
     },
     async mounted() {
         this.initMap(this.municipalityMap)
+        this.fillMap(this.municipalityMap)
     },
     watch: {
         municipalityMap: function() {
-            d3.select("svg").remove();
+            d3.select("#map").select("svg").remove();
             this.initMap(this.municipalityMap);
+            this.fillMap(this.municipalityMap);
         }
     }
-
 }
 </script>
 
 <style>
 path {
-  fill: none;
   stroke: #000;
   stroke-width: 0.5px;
 }
