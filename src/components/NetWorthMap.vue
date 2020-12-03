@@ -1,6 +1,6 @@
 <template>
     <div id="map">
-        <net-worth-map-tooltip v-if="tooltipVisible" :regionName="activeRegionName" :mouseX="mouseX" :mouseY="mouseY"/>
+        <net-worth-map-tooltip v-if="tooltipVisible" :regionName="activeRegionName" :mouseX="mouseX" :mouseY="mouseY" valueDescription="Mean wealth" :value="tooltipValue"/>
     </div>
 </template>
 
@@ -20,9 +20,12 @@ export default {
     data() {
         return {
             tooltipVisible: false,
+            activeRegion: "",
             activeRegionName: "",
+            tooltipValue: 0,
             mouseX: 0,
-            mouseY: 0
+            mouseY: 0,
+            data: []
         }
     },
     methods: {
@@ -66,25 +69,29 @@ export default {
             } else {
                 netWorth = await d3.csv('vermogen_provincies_modified.csv');
             }
-            const nw2019 = netWorth.filter(n => n.Perioden == "2016JJ00").filter(n => n.KenmerkenHuishouden == "1050010");
-            const extent = d3.extent(nw2019, nw=> parseFloat(nw.GemiddeldVermogen_4));
+            this.data = netWorth.filter(n => n.Perioden == "2019JJ00").filter(n => n.KenmerkenHuishouden == "1050010");
+            const extent = d3.extent(this.data, nw=> parseFloat(nw.GemiddeldVermogen_4));
             const colorScale = d3.scaleSequential(d3.interpolateViridis).domain(extent);
 
             svg.selectAll(".region")
                 .attr("fill", function(d) {
-                    const meanIncome = nw2019.find(nw => nw.RegioS == d.id).GemiddeldVermogen_4;
+                    const meanIncome = vm.data.find(nw => nw.RegioS == d.id).GemiddeldVermogen_4;
                     return meanIncome > 0 ? colorScale(parseFloat(meanIncome)) : 'lightgrey';
                 })
                 .on('mousemove', function(r) {
-                    vm.showTooltip(r.srcElement.__data__.properties.statnaam, r.pageX, r.pageY);
+                    vm.showTooltip(r.srcElement.__data__, r.pageX, r.pageY);
                 })
                 .on('mouseout', function(r) {
                     vm.hideTooltip();
                 });
         },
-        showTooltip(name, mouseX, mouseY) {
+        showTooltip(data, mouseX, mouseY) {
             if (this.mouseX != mouseX || this.mouseY != mouseY || this.tooltipVisible == false) {
-                this.activeRegionName = name;
+                if (this.activeRegion != data.id) {
+                    this.activeRegion = data.id;
+                    this.activeRegionName = data.properties.statnaam;
+                    this.tooltipValue = parseFloat(this.data.find(nw => nw.RegioS == data.id).GemiddeldVermogen_4);
+                }
                 this.mouseX = mouseX;
                 this.mouseY = mouseY;
                 this.tooltipVisible = true;
@@ -94,6 +101,7 @@ export default {
         hideTooltip() {
             this.tooltipVisible = false;
             this.activeRegionName = "";
+            this.activeRegion = "";
             this.mouseX = 0;
             this.mouseY = 0;
         }

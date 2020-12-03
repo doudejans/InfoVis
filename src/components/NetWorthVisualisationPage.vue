@@ -1,7 +1,7 @@
 <template>
   <div class="container mx-auto p-4">
     <div class="flex-auto flex justify-between">
-      <h1 class="text-4xl">Net worth</h1>
+      <h1 class="text-4xl font-serif">Net worth</h1>
       <div class="flex">
         <a class="button-group leftmost" :class="{ active: municipalityMap }" @click="municipalityMap = true">Municipalities</a>
         <a class="button-group rightmost" :class="{ active: !municipalityMap }" @click="municipalityMap = false">Provinces</a>
