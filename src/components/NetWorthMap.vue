@@ -1,17 +1,28 @@
 <template>
-    <div id="map"/>
+    <div id="map">
+        <net-worth-map-tooltip v-if="tooltipVisible" :regionName="activeRegionName" :mouseX="mouseX" :mouseY="mouseY"/>
+    </div>
 </template>
 
 <script>
 import * as d3 from "d3";
+
+import NetWorthMapTooltip from "./NetWorthMapTooltip.vue";
 
 export default {
     name: 'NetWorthMap',
     props: {
         municipalityMap: Boolean
     },
+    components: {
+        NetWorthMapTooltip
+    },
     data() {
         return {
+            tooltipVisible: false,
+            activeRegionName: "",
+            mouseX: 0,
+            mouseY: 0
         }
     },
     methods: {
@@ -47,6 +58,7 @@ export default {
         },
         async fillMap(municipalityMap) {
             const svg = d3.select("#map").select("svg");
+            const vm = this;
 
             var netWorth;
             if (municipalityMap) {
@@ -54,15 +66,36 @@ export default {
             } else {
                 netWorth = await d3.csv('vermogen_provincies_modified.csv');
             }
-            const nw2019 = netWorth.filter(n => n.Perioden == "2019JJ00").filter(n => n.KenmerkenHuishouden == "1050010");
+            const nw2019 = netWorth.filter(n => n.Perioden == "2016JJ00").filter(n => n.KenmerkenHuishouden == "1050010");
             const extent = d3.extent(nw2019, nw=> parseFloat(nw.GemiddeldVermogen_4));
-            const colorScale = d3.scaleSequential(d3.interpolateBlues).domain(extent);
+            const colorScale = d3.scaleSequential(d3.interpolateViridis).domain(extent);
 
             svg.selectAll(".region")
-                .attr("fill", function(d) { 
+                .attr("fill", function(d) {
                     const meanIncome = nw2019.find(nw => nw.RegioS == d.id).GemiddeldVermogen_4;
-                    return colorScale(parseFloat(meanIncome))
+                    return meanIncome > 0 ? colorScale(parseFloat(meanIncome)) : 'lightgrey';
+                })
+                .on('mousemove', function(r) {
+                    vm.showTooltip(r.srcElement.__data__.properties.statnaam, r.pageX, r.pageY);
+                })
+                .on('mouseout', function(r) {
+                    vm.hideTooltip();
                 });
+        },
+        showTooltip(name, mouseX, mouseY) {
+            if (this.mouseX != mouseX || this.mouseY != mouseY || this.tooltipVisible == false) {
+                this.activeRegionName = name;
+                this.mouseX = mouseX;
+                this.mouseY = mouseY;
+                this.tooltipVisible = true;
+            }
+            
+        },
+        hideTooltip() {
+            this.tooltipVisible = false;
+            this.activeRegionName = "";
+            this.mouseX = 0;
+            this.mouseY = 0;
         }
     },
     async mounted() {
@@ -81,8 +114,8 @@ export default {
 
 <style>
 path {
-  stroke: #000;
-  stroke-width: 0.5px;
+  stroke: #FFF;
+  stroke-width: 0.2px;
 }
 
 </style>
