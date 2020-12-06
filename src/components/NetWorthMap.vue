@@ -14,7 +14,7 @@ export default {
     name: 'NetWorthMap',
     props: {
         municipalityMap: Boolean,
-        activeFeature: Number
+        activeFeature: String
     },
     components: {
         NetWorthMapTooltip

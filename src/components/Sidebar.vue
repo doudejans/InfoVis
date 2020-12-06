@@ -35,7 +35,7 @@ export default {
     name: 'Sidebar',
     props: {
         municipalityMap: Boolean,
-        activeFeature: Number
+        activeFeature: String
     },
     data() {
         return {
@@ -50,7 +50,7 @@ export default {
             this.$emit('switchMap', value);
         },
         toggleActiveFeature(value) {
-            this.$emit('switchFeature', parseInt(value, 10));
+            this.$emit('switchFeature', value);
         }
     },
     async mounted() {
