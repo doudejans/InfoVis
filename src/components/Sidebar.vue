@@ -4,7 +4,7 @@
             <a class="button-group leftmost " :class="{ active: municipalityMap }" @click="toggleMunicipalityMap(true)">Municipalities</a>
             <a class="button-group rightmost " :class="{ active: !municipalityMap }" @click="toggleMunicipalityMap(false)">Provinces</a>
         </div>
-        
+
         <div class="flex-1 my-2">
             <ul>
                 <li v-for="(value, name) in features" :key="name">
@@ -34,24 +34,23 @@ import * as d3 from "d3";
 export default {
     name: 'Sidebar',
     props: {
-        municipalityMap: Boolean
+        municipalityMap: Boolean,
+        activeFeature: Number
     },
     data() {
         return {
             features: {},
-            opened: {},
-            activeFeature: 1050010,
+            opened: {}
         }
     },
     computed: {
     },
     methods: {
         toggleMunicipalityMap(value) {
-            this.$emit('switchMap', value)
+            this.$emit('switchMap', value);
         },
         toggleActiveFeature(value) {
-            this.activeFeature = value;
-            // TODO: emit and update map
+            this.$emit('switchFeature', parseInt(value, 10));
         }
     },
     async mounted() {

@@ -13,7 +13,8 @@ import NetWorthMapTooltip from "./NetWorthMapTooltip.vue";
 export default {
     name: 'NetWorthMap',
     props: {
-        municipalityMap: Boolean
+        municipalityMap: Boolean,
+        activeFeature: Number
     },
     components: {
         NetWorthMapTooltip
@@ -56,7 +57,7 @@ export default {
                 .attr("d", path)
                 .attr("fill", "white");
         },
-        async fillMap(municipalityMap) {
+        async fillMap(municipalityMap, activeFeature) {
             const svg = d3.select("#map").select("svg");
             const vm = this;
 
@@ -66,7 +67,7 @@ export default {
             } else {
                 netWorth = await d3.csv('vermogen_provincies_modified.csv');
             }
-            this.data = netWorth.filter(n => n.Perioden == "2019JJ00").filter(n => n.KenmerkenHuishouden == "1050010");
+            this.data = netWorth.filter(n => n.Perioden == "2019JJ00").filter(n => n.KenmerkenHuishouden == activeFeature);
             const extent = d3.extent(this.data, nw=> parseFloat(nw.GemiddeldVermogen_4));
             const colorScale = d3.scaleSequential(d3.interpolateViridis).domain(extent);
 
@@ -85,7 +86,7 @@ export default {
         redraw() {
             d3.select("#map").select("svg").selectAll("*").remove();
             this.initMap(this.municipalityMap);
-            this.fillMap(this.municipalityMap);
+            this.fillMap(this.municipalityMap, this.activeFeature);
         },
         showTooltip(data, mouseX, mouseY) {
             if (this.mouseX != mouseX || this.mouseY != mouseY || this.tooltipVisible == false) {
@@ -110,11 +111,14 @@ export default {
     },
     async mounted() {
         this.initMap(this.municipalityMap);
-        this.fillMap(this.municipalityMap);
+        this.fillMap(this.municipalityMap, this.activeFeature);
         window.addEventListener('resize', this.redraw);
     },
     watch: {
         municipalityMap: function() {
+            this.redraw()
+        },
+        activeFeature: function() {
             this.redraw()
         }
     }

@@ -3,8 +3,8 @@
     <h1 class="text-4xl font-serif">Household wealth distribution</h1>
 
     <div class="container mx-auto flex-1 flex">
-      <net-worth-map class="flex w-2/3 m-2" v-bind:municipalityMap="municipalityMap"/>
-      <sidebar class="w-1/3 m-2" v-bind:municipalityMap="municipalityMap" @switchMap="switchMap"/>
+      <net-worth-map class="flex w-2/3 m-2" v-bind:municipalityMap="municipalityMap" v-bind:activeFeature="activeFeature"/>
+      <sidebar class="w-1/3 m-2" v-bind:municipalityMap="municipalityMap" v-bind:activeFeature="activeFeature" @switchMap="switchMap" @switchFeature="switchFeature"/>
     </div>
   </div>
 </template>
@@ -23,12 +23,16 @@ export default {
   },
   data() {
     return {
-      municipalityMap: true
+      municipalityMap: true,
+      activeFeature: 1050010
     }
   },
   methods: {
     switchMap(newValue) {
       this.municipalityMap = newValue;
+    },
+    switchFeature(newValue) {
+      this.activeFeature = newValue;
     }
   }
 }
