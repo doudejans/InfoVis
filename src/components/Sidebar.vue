@@ -4,10 +4,33 @@
             <a class="button-group leftmost " :class="{ active: municipalityMap }" @click="toggleMunicipalityMap(true)">Municipalities</a>
             <a class="button-group rightmost " :class="{ active: !municipalityMap }" @click="toggleMunicipalityMap(false)">Provinces</a>
         </div>
+        
+        <div class="flex-1 my-2">
+            <ul>
+                <li v-for="(value, name) in features" :key="name">
+                    <a class="flex p-1 text-sm font-semibold text-gray-600 hover:bg-gray-50 rounded-md cursor-pointer select-none duration-200 ease-in-out"
+                        @click="this.opened[name] = !this.opened[name]"
+                    >
+                        {{name}}
+                    </a>
+                    <ul v-if="this.opened[name]">
+                        <li v-for="row in value" :key="row.Key">
+                            <a class="flex ml-4 p-1 text-sm font-medium text-gray-500 hover:bg-gray-50 rounded-md cursor-pointer select-none duration-200 ease-in-out"
+                                :class="{active: activeFeature == row.Key}"
+                                @click="toggleActiveFeature(row.Key)">
+                                {{row.Title}}
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
     </div>
 </template>
 
 <script>
+import * as d3 from "d3";
+
 export default {
     name: 'Sidebar',
     props: {
@@ -15,6 +38,9 @@ export default {
     },
     data() {
         return {
+            features: {},
+            opened: {},
+            activeFeature: 1050010,
         }
     },
     computed: {
@@ -22,7 +48,26 @@ export default {
     methods: {
         toggleMunicipalityMap(value) {
             this.$emit('switchMap', value)
+        },
+        toggleActiveFeature(value) {
+            this.activeFeature = value;
+            // TODO: emit and update map
         }
+    },
+    async mounted() {
+        const parsed_csv = await d3.csv("metadata_kenmerken_en.csv");
+
+        var groupBy = function(xs, key) {
+            return xs.reduce(function(rv, x) {
+                (rv[x[key]] = rv[x[key]] || []).push(x);
+                return rv;
+            }, {});
+        };
+
+        this.features = groupBy(parsed_csv, 'Category');
+        Object.keys(this.features).forEach(key => {
+            this.opened[key] = false;
+        });
     }
 }
 </script>
@@ -40,7 +85,7 @@ export default {
   @apply rounded-r-md;
 }
 
-.button-group.active {
+.active {
   @apply bg-blue-800 text-white hover:bg-blue-700;
 }
 </style>
