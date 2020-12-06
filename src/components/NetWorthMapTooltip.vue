@@ -5,7 +5,7 @@
             <span class="mr-2">{{valueDescription}}:</span>
             <div v-if="value">
                 <span class="">{{value}}</span>
-                <span>k EUR</span>
+                <span>{{valueUnit}} EUR</span>
             </div>
             <div class="" v-else>
                 No data available
@@ -22,7 +22,8 @@ export default {
         mouseX: Number,
         mouseY: Number,
         valueDescription: String,
-        value: Number
+        value: Number,
+        valueUnit: String
     },
     data() {
         return {

@@ -5,6 +5,12 @@
             <a class="button-group rightmost " :class="{ active: !municipalityMap }" @click="toggleMunicipalityMap(false)">Provinces</a>
         </div>
 
+        <div class="flex justify-center my-2">
+            <a class="button-group leftmost" :class="{ active: activeStatistic == 'mean' }" @click="setActiveStatistic('mean')">Mean</a>
+            <a class="button-group" :class="{ active: activeStatistic == 'median' }" @click="setActiveStatistic('median')">Median</a>
+            <a class="button-group rightmost" :class="{ active: activeStatistic == 'total' }" @click="setActiveStatistic('total')">Total</a>
+        </div>
+
         <div class="flex-1 my-2">
             <ul>
                 <li v-for="(value, name) in features" :key="name">
@@ -35,6 +41,7 @@ export default {
     name: 'Sidebar',
     props: {
         municipalityMap: Boolean,
+        activeStatistic: String,
         activeFeature: String
     },
     data() {
@@ -48,6 +55,9 @@ export default {
     methods: {
         toggleMunicipalityMap(value) {
             this.$emit('switchMap', value);
+        },
+        setActiveStatistic(value) {
+            this.$emit('switchStatistic', value);
         },
         toggleActiveFeature(value) {
             this.$emit('switchFeature', value);

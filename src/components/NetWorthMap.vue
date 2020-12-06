@@ -1,7 +1,14 @@
 <template>
     <div id="map">
         <svg width="960" height="960" viewbox="0 0 1000 1000"></svg>
-        <net-worth-map-tooltip v-if="tooltipVisible" :regionName="activeRegionName" :mouseX="mouseX" :mouseY="mouseY" valueDescription="Mean wealth" :value="tooltipValue"/>
+        <net-worth-map-tooltip
+            v-if="tooltipVisible"
+            :regionName="activeRegionName"
+            :mouseX="mouseX"
+            :mouseY="mouseY"
+            v-bind:valueDescription="this.activeStatistic.capitalize() + ' wealth'"
+            :value="tooltipValue"
+            v-bind:valueUnit="this.activeStatistic == 'total' ? 'mrd' : 'k'"/>
     </div>
 </template>
 
@@ -10,10 +17,15 @@ import * as d3 from "d3";
 
 import NetWorthMapTooltip from "./NetWorthMapTooltip.vue";
 
+String.prototype.capitalize = function() {
+    return this.charAt(0).toUpperCase() + this.slice(1);
+}
+
 export default {
     name: 'NetWorthMap',
     props: {
         municipalityMap: Boolean,
+        activeStatistic: String,
         activeFeature: String
     },
     components: {
@@ -31,6 +43,20 @@ export default {
         }
     },
     methods: {
+        getCurrentStatisticValue(row) {
+            switch(this.activeStatistic) {
+                case 'mean':
+                    return row.GemiddeldVermogen_4;
+                    break;
+                case 'median':
+                    return row.MediaanVermogen_5;
+                    break;
+                case 'total':
+                    return row.TotaalVermogen_3;
+                default:
+                    return row.GemiddeldVermogen_4;
+            }
+        },
         async initMap(municipalityMap) {
             const svg = d3.select("#map").select("svg");
             const box = d3.select("#map").node();
@@ -57,7 +83,7 @@ export default {
                 .attr("d", path)
                 .attr("fill", "white");
         },
-        async fillMap(municipalityMap, activeFeature) {
+        async fillMap(municipalityMap, activeStatistic, activeFeature) {
             const svg = d3.select("#map").select("svg");
             const vm = this;
 
@@ -68,12 +94,12 @@ export default {
                 netWorth = await d3.csv('vermogen_provincies_modified.csv');
             }
             this.data = netWorth.filter(n => n.Perioden == "2019JJ00").filter(n => n.KenmerkenHuishouden == activeFeature);
-            const extent = d3.extent(this.data, nw=> parseFloat(nw.GemiddeldVermogen_4));
+            const extent = d3.extent(this.data, nw=> parseFloat(vm.getCurrentStatisticValue(nw)));
             const colorScale = d3.scaleSequential(d3.interpolateViridis).domain(extent);
 
             svg.selectAll(".region")
                 .attr("fill", function(d) {
-                    const meanIncome = vm.data.find(nw => nw.RegioS == d.id).GemiddeldVermogen_4;
+                    const meanIncome = vm.getCurrentStatisticValue(vm.data.find(nw => nw.RegioS == d.id));
                     return meanIncome != "." ? colorScale(parseFloat(meanIncome)) : 'lightgrey';
                 })
                 .on('mousemove', function(r) {
@@ -86,20 +112,19 @@ export default {
         redraw() {
             d3.select("#map").select("svg").selectAll("*").remove();
             this.initMap(this.municipalityMap);
-            this.fillMap(this.municipalityMap, this.activeFeature);
+            this.fillMap(this.municipalityMap, this.activeStatistic, this.activeFeature);
         },
         showTooltip(data, mouseX, mouseY) {
             if (this.mouseX != mouseX || this.mouseY != mouseY || this.tooltipVisible == false) {
                 if (this.activeRegion != data.id) {
                     this.activeRegion = data.id;
                     this.activeRegionName = data.properties.statnaam;
-                    this.tooltipValue = parseFloat(this.data.find(nw => nw.RegioS == data.id).GemiddeldVermogen_4);
+                    this.tooltipValue = parseFloat(this.getCurrentStatisticValue(this.data.find(nw => nw.RegioS == data.id)));
                 }
                 this.mouseX = mouseX;
                 this.mouseY = mouseY;
                 this.tooltipVisible = true;
             }
-            
         },
         hideTooltip() {
             this.tooltipVisible = false;
@@ -111,11 +136,14 @@ export default {
     },
     async mounted() {
         this.initMap(this.municipalityMap);
-        this.fillMap(this.municipalityMap, this.activeFeature);
+        this.fillMap(this.municipalityMap, this.activeStatistic, this.activeFeature);
         window.addEventListener('resize', this.redraw);
     },
     watch: {
         municipalityMap: function() {
+            this.redraw()
+        },
+        activeStatistic: function() {
             this.redraw()
         },
         activeFeature: function() {
