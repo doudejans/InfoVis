@@ -4,23 +4,20 @@
 
     <div class="container mx-auto flex-1 flex">
       <net-worth-map class="flex w-2/3 m-2" v-bind:municipalityMap="municipalityMap"/>
-      <div class="w-1/3 m-2">
-        <div class="flex justify-center">
-          <a class="button-group leftmost " :class="{ active: municipalityMap }" @click="municipalityMap = true">Municipalities</a>
-          <a class="button-group rightmost " :class="{ active: !municipalityMap }" @click="municipalityMap = false">Provinces</a>
-        </div>
-      </div>
+      <sidebar class="w-1/3 m-2" v-bind:municipalityMap="municipalityMap" @switchMap="switchMap"/>
     </div>
   </div>
 </template>
 
 <script>
 import NetWorthMap from "./NetWorthMap.vue";
+import Sidebar from "./Sidebar.vue";
 
 export default {
   name: 'NetWorthVisualisationPage',
   components: {
-    NetWorthMap
+    NetWorthMap,
+    Sidebar
   },
   props: {
   },
@@ -28,24 +25,11 @@ export default {
     return {
       municipalityMap: true
     }
+  },
+  methods: {
+    switchMap(newValue) {
+      this.municipalityMap = newValue;
+    }
   }
 }
 </script>
-
-<style>
-.button-group {
-  @apply flex-1 inline-flex justify-center items-center px-2 border border-blue-800 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 cursor-pointer select-none duration-200 ease-in-out;
-}
-
-.button-group.leftmost {
-  @apply rounded-l-md;
-}
-
-.button-group.rightmost {
-  @apply rounded-r-md;
-}
-
-.button-group.active {
-  @apply bg-blue-800 text-white hover:bg-blue-700;
-}
-</style>
