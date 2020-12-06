@@ -1,5 +1,6 @@
 <template>
     <div id="map">
+        <svg width="960" height="960" viewbox="0 0 1000 1000"></svg>
         <net-worth-map-tooltip v-if="tooltipVisible" :regionName="activeRegionName" :mouseX="mouseX" :mouseY="mouseY" valueDescription="Mean wealth" :value="tooltipValue"/>
     </div>
 </template>
@@ -30,11 +31,13 @@ export default {
     },
     methods: {
         async initMap(municipalityMap) {
-            const width = 960,
-            height = 1160;
+            console.log("hello")
+            const svg = d3.select("#map").select("svg");
+            const box = d3.select("#map").node();
 
-            const svg = d3.select("#map").append("svg")
-                .attr("width", width)
+            const width = box.getBoundingClientRect().width,
+                height = box.getBoundingClientRect().height;
+            svg.attr("width", width)
                 .attr("height", height);
 
             var geoRegions;
@@ -44,12 +47,7 @@ export default {
                 geoRegions = await d3.json("provincie_2020.geojson");
             }
 
-            const projection = d3.geoMercator()
-                .scale(10000)
-                .center([0, 52])
-                .rotate([-4.8, 0])
-                .translate([width/2, height/2]);
-
+            const projection = d3.geoMercator().fitSize([width, height], geoRegions);
             const path = d3.geoPath().projection(projection);
 
             svg.selectAll(".region")
@@ -85,6 +83,11 @@ export default {
                     vm.hideTooltip();
                 });
         },
+        redraw() {
+            d3.select("#map").select("svg").selectAll("*").remove();
+            this.initMap(this.municipalityMap);
+            this.fillMap(this.municipalityMap);
+        },
         showTooltip(data, mouseX, mouseY) {
             if (this.mouseX != mouseX || this.mouseY != mouseY || this.tooltipVisible == false) {
                 if (this.activeRegion != data.id) {
@@ -107,14 +110,13 @@ export default {
         }
     },
     async mounted() {
-        this.initMap(this.municipalityMap)
-        this.fillMap(this.municipalityMap)
+        this.initMap(this.municipalityMap);
+        this.fillMap(this.municipalityMap);
+        window.addEventListener('resize', this.redraw);
     },
     watch: {
         municipalityMap: function() {
-            d3.select("#map").select("svg").remove();
-            this.initMap(this.municipalityMap);
-            this.fillMap(this.municipalityMap);
+            this.redraw()
         }
     }
 }

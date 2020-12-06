@@ -1,14 +1,19 @@
 <template>
-  <div class="container mx-auto p-4">
+  <div class="container mx-auto p-4 h-screen flex flex-col">
     <div class="flex-auto flex justify-between">
-      <h1 class="text-4xl font-serif">Net worth</h1>
+      <h1 class="text-4xl font-serif">Household wealth distribution</h1>
       <div class="flex">
         <a class="button-group leftmost" :class="{ active: municipalityMap }" @click="municipalityMap = true">Municipalities</a>
         <a class="button-group rightmost" :class="{ active: !municipalityMap }" @click="municipalityMap = false">Provinces</a>
       </div>
     </div>
 
-    <net-worth-map v-bind:municipalityMap="municipalityMap"/>
+    <div class="container mx-auto flex-1 flex">
+      <net-worth-map class="flex w-2/3 m-2" v-bind:municipalityMap="municipalityMap"/>
+      <div class="flex w-1/3 m-2">
+        Map options and details go here
+      </div>
+    </div>
   </div>
 </template>
 
