@@ -74,7 +74,7 @@ export default {
             svg.selectAll(".region")
                 .attr("fill", function(d) {
                     const meanIncome = vm.data.find(nw => nw.RegioS == d.id).GemiddeldVermogen_4;
-                    return meanIncome > 0 ? colorScale(parseFloat(meanIncome)) : 'lightgrey';
+                    return meanIncome != "." ? colorScale(parseFloat(meanIncome)) : 'lightgrey';
                 })
                 .on('mousemove', function(r) {
                     vm.showTooltip(r.srcElement.__data__, r.pageX, r.pageY);
