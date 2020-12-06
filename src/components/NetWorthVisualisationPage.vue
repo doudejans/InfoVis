@@ -1,17 +1,14 @@
 <template>
   <div class="container mx-auto p-4 h-screen flex flex-col">
-    <div class="flex-auto flex justify-between">
-      <h1 class="text-4xl font-serif">Household wealth distribution</h1>
-      <div class="flex">
-        <a class="button-group leftmost" :class="{ active: municipalityMap }" @click="municipalityMap = true">Municipalities</a>
-        <a class="button-group rightmost" :class="{ active: !municipalityMap }" @click="municipalityMap = false">Provinces</a>
-      </div>
-    </div>
+    <h1 class="text-4xl font-serif">Household wealth distribution</h1>
 
     <div class="container mx-auto flex-1 flex">
       <net-worth-map class="flex w-2/3 m-2" v-bind:municipalityMap="municipalityMap"/>
-      <div class="flex w-1/3 m-2">
-        Map options and details go here
+      <div class="w-1/3 m-2">
+        <div class="flex justify-center">
+          <a class="button-group leftmost " :class="{ active: municipalityMap }" @click="municipalityMap = true">Municipalities</a>
+          <a class="button-group rightmost " :class="{ active: !municipalityMap }" @click="municipalityMap = false">Provinces</a>
+        </div>
       </div>
     </div>
   </div>
@@ -37,7 +34,7 @@ export default {
 
 <style>
 .button-group {
-  @apply relative inline-flex items-center px-2 border border-blue-800 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 cursor-pointer select-none duration-200 ease-in-out;
+  @apply flex-1 inline-flex justify-center items-center px-2 border border-blue-800 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 cursor-pointer select-none duration-200 ease-in-out;
 }
 
 .button-group.leftmost {

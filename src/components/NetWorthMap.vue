@@ -31,7 +31,6 @@ export default {
     },
     methods: {
         async initMap(municipalityMap) {
-            console.log("hello")
             const svg = d3.select("#map").select("svg");
             const box = d3.select("#map").node();
 
