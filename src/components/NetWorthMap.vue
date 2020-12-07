@@ -14,6 +14,7 @@
 
 <script>
 import * as d3 from "d3";
+import {groupBy} from "lodash";
 
 import NetWorthMapTooltip from "./NetWorthMapTooltip.vue";
 
@@ -40,8 +41,8 @@ export default {
             mouseX: 0,
             mouseY: 0,
             data: [],
-            wealthMunicipalities: [],
-            wealthProvinces: [],
+            wealthMunicipalities: {},
+            wealthProvinces: {},
             municipalityRegions: {},
             provinceRegions: {},
         }
@@ -88,13 +89,15 @@ export default {
 
             var netWorth = municipalityMap ? this.wealthMunicipalities : this.wealthProvinces;
 
-            this.data = netWorth.filter(n => n.Perioden == "2019JJ00").filter(n => n.KenmerkenHuishouden == activeFeature);
+            this.data = netWorth[["2019JJ00", activeFeature]];
             const extent = d3.extent(this.data, nw=> parseFloat(vm.getCurrentStatisticValue(nw)));
             const colorScale = d3.scaleSequential(d3.interpolateViridis).domain(extent);
 
+            const map = new Map(this.data.map(row => [row.RegioS, row]))
+
             svg.selectAll(".region")
                 .attr("fill", function(d) {
-                    const meanIncome = vm.getCurrentStatisticValue(vm.data.find(nw => nw.RegioS == d.id));
+                    const meanIncome = vm.getCurrentStatisticValue(map.get(d.id));
                     return meanIncome != "." ? colorScale(parseFloat(meanIncome)) : 'lightgrey';
                 })
                 .on('mousemove', function(r) {
@@ -103,6 +106,9 @@ export default {
                 .on('mouseout', function(r) {
                     vm.hideTooltip();
                 });
+        },
+        filter() {
+            
         },
         redraw() {
             d3.select("#map").select("svg").selectAll("*").remove();
@@ -130,8 +136,12 @@ export default {
         }
     },
     async mounted() {
-        this.wealthMunicipalities = await d3.csv('vermogen_gemeenten_modified.csv');
-        this.wealthProvinces = await d3.csv('vermogen_provincies_modified.csv');
+        const municipalityTable = await d3.csv('vermogen_gemeenten_modified.csv');
+        this.wealthMunicipalities = groupBy(municipalityTable, w => [w.Perioden, w.KenmerkenHuishouden]);
+
+        const provinceTable = await d3.csv('vermogen_provincies_modified.csv');
+        this.wealthProvinces = groupBy(provinceTable, w => [w.Perioden, w.KenmerkenHuishouden]);
+
         this.municipalityRegions = await d3.json("gemeente_2020.geojson");
         this.provinceRegions = await d3.json("provincie_2020.geojson");
 

@@ -8,6 +8,7 @@
   "dependencies": {
     "d3": "^6.2.0",
     "d3-geo": "^2.0.1",
+    "lodash": "^4.17.20",
     "vue": "^3.0.2"
   },
   "devDependencies": {

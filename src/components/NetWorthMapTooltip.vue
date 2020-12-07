@@ -1,6 +1,8 @@
 <template>
     <div id="tooltip" class="absolute p-2 bg-white rounded border border-gray-200 border-solid shadow-md text-sm" :style="{left: mouseX + 'px', top: mouseY + 20 + 'px'}">
-        <p class="font-bold font-serif">{{ regionName }}</p>
+        <p class="font-bold font-serif">
+            {{ regionName }}
+        </p>
         <p class="font-light">
             <span class="mr-2">{{valueDescription}}:</span>
             <div v-if="value">
