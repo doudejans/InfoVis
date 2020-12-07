@@ -13,8 +13,8 @@
         </div>
 
         <div class="flex justify-between items-center space-x-2 my-2">
-            <a v-if="!this.yearInterval" class="flex text-2xl text-blue-800 hover:text-blue-700 cursor-pointer select-none duration-200 ease-in-out" @click="loopYears(true)">▶</a>
-            <a v-if="this.yearInterval" class="flex text-2xl text-blue-800 hover:text-blue-700 cursor-pointer select-none duration-200 ease-in-out" @click="loopYears(false)">■</a>
+            <a v-if="!this.yearInterval" class="flex w-7 text-2xl text-blue-800 hover:text-blue-700 cursor-pointer select-none duration-200 ease-in-out" @click="loopYears(true)">▶</a>
+            <a v-if="this.yearInterval" class="flex w-7 text-2xl text-blue-800 hover:text-blue-700 cursor-pointer select-none duration-200 ease-in-out" @click="loopYears(false)">■</a>
             <input type="range" min="2011" max="2019" v-bind:value="activeYear" class="w-full" @input="setActiveYear($event)">
             <span class="flex w-12 text-sm font-medium text-gray-500">{{activeYear}}</span>
         </div>
