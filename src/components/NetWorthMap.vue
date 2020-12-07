@@ -8,7 +8,7 @@
             :mouseY="mouseY"
             v-bind:valueDescription="this.activeStatistic.capitalize() + ' wealth'"
             :value="tooltipValue"
-            v-bind:valueUnit="this.activeStatistic == 'total' ? 'mrd' : 'k'"/>
+            v-bind:valueUnit="this.activeStatistic == 'total' ? 'b' : 'k'"/>
     </div>
 </template>
 

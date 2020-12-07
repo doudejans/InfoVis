@@ -103,17 +103,6 @@ export default {
         Object.keys(this.features).forEach(key => {
             this.opened[key] = false;
         });
-    },
-    watch: {
-        // loopingYears: function() {
-        //     if(this.loopingYears) {
-        //         setInterval(function(){
-        //             this.setActiveYear({target: {value: this.activeYear == 2019 ? 2011 : this.activeYear + 1}});
-        //         }, 5000);
-        //     } else {
-        //         clearInterval();
-        //     }
-        // }
     }
 }
 </script>
@@ -151,5 +140,15 @@ input[type=range]::-webkit-slider-thumb {
 }
 input[type=range]:focus::-webkit-slider-runnable-track {
     @apply bg-gray-100;
+}
+input[type=range]::-moz-range-track {
+    @apply bg-white h-3.5 border border-solid border-blue-800 rounded-md hover:bg-gray-100 cursor-pointer select-none duration-200 ease-in-out;
+}
+input[type=range]::-moz-range-thumb {
+    appearance: none;
+    @apply w-6 h-6 -mt-1.5 border-none bg-blue-800 rounded-xl hover:bg-blue-700 cursor-pointer select-none duration-200 ease-in-out;
+}
+input[type=range]:focus::-moz-range-track {
+    @apply bg-white h-3.5 border border-solid border-blue-800 rounded-md hover:bg-gray-100 cursor-pointer select-none duration-200 ease-in-out;
 }
 </style>
