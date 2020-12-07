@@ -1,6 +1,7 @@
 <template>
     <div>
-        <div class="flex justify-center">
+        <h2 class="text-xl font-serif mb-2">Visualization options</h2>
+        <div class="flex justify-center my-2">
             <a class="button-group leftmost " :class="{ active: municipalityMap }" @click="toggleMunicipalityMap(true)">Municipalities</a>
             <a class="button-group rightmost " :class="{ active: !municipalityMap }" @click="toggleMunicipalityMap(false)">Provinces</a>
         </div>
@@ -11,6 +12,7 @@
             <a class="button-group rightmost" :class="{ active: activeStatistic == 'total' }" @click="setActiveStatistic('total')">Total</a>
         </div>
 
+        <h2 class="text-xl font-serif mt-4">Features</h2>
         <div class="flex-1 my-2">
             <ul>
                 <li v-for="(value, name) in features" :key="name">
