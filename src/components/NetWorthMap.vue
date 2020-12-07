@@ -26,7 +26,8 @@ export default {
     props: {
         municipalityMap: Boolean,
         activeStatistic: String,
-        activeFeature: String
+        activeFeature: String,
+        activeYear: Number
     },
     components: {
         NetWorthMapTooltip
@@ -82,13 +83,13 @@ export default {
                 .attr("d", path)
                 .attr("fill", "white");
         },
-        fillMap(municipalityMap, activeStatistic, activeFeature) {
+        fillMap(municipalityMap, activeStatistic, activeFeature, activeYear) {
             const svg = d3.select("#map").select("svg");
             const vm = this;
 
             var netWorth = municipalityMap ? this.wealthMunicipalities : this.wealthProvinces;
 
-            this.data = netWorth.filter(n => n.Perioden == "2019JJ00").filter(n => n.KenmerkenHuishouden == activeFeature);
+            this.data = netWorth.filter(n => n.Perioden == activeYear + "JJ00").filter(n => n.KenmerkenHuishouden == activeFeature);
             const extent = d3.extent(this.data, nw=> parseFloat(vm.getCurrentStatisticValue(nw)));
             const colorScale = d3.scaleSequential(d3.interpolateViridis).domain(extent);
 
@@ -107,7 +108,7 @@ export default {
         redraw() {
             d3.select("#map").select("svg").selectAll("*").remove();
             this.initMap(this.municipalityMap);
-            this.fillMap(this.municipalityMap, this.activeStatistic, this.activeFeature);
+            this.fillMap(this.municipalityMap, this.activeStatistic, this.activeFeature, this.activeYear);
         },
         showTooltip(data, mouseX, mouseY) {
             if (this.mouseX != mouseX || this.mouseY != mouseY || this.tooltipVisible == false) {
@@ -135,8 +136,7 @@ export default {
         this.municipalityRegions = await d3.json("gemeente_2020.geojson");
         this.provinceRegions = await d3.json("provincie_2020.geojson");
 
-        this.initMap(this.municipalityMap);
-        this.fillMap(this.municipalityMap, this.activeStatistic, this.activeFeature);
+        this.redraw();
         window.addEventListener('resize', this.redraw);
     },
     watch: {
@@ -144,10 +144,13 @@ export default {
             this.redraw()
         },
         activeStatistic: function() {
-            this.fillMap(this.municipalityMap, this.activeStatistic, this.activeFeature);
+            this.fillMap(this.municipalityMap, this.activeStatistic, this.activeFeature, this.activeYear);
         },
         activeFeature: function() {
-            this.fillMap(this.municipalityMap, this.activeStatistic, this.activeFeature);
+            this.fillMap(this.municipalityMap, this.activeStatistic, this.activeFeature, this.activeYear);
+        },
+        activeYear: function() {
+            this.fillMap(this.municipalityMap, this.activeStatistic, this.activeFeature, this.activeYear)
         }
     }
 }

@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="justify-items-center">
         <h2 class="text-xl font-serif mb-2">Visualization options</h2>
         <div class="flex justify-center my-2">
             <a class="button-group leftmost " :class="{ active: municipalityMap }" @click="toggleMunicipalityMap(true)">Municipalities</a>
@@ -10,6 +10,13 @@
             <a class="button-group leftmost" :class="{ active: activeStatistic == 'mean' }" @click="setActiveStatistic('mean')">Mean</a>
             <a class="button-group" :class="{ active: activeStatistic == 'median' }" @click="setActiveStatistic('median')">Median</a>
             <a class="button-group rightmost" :class="{ active: activeStatistic == 'total' }" @click="setActiveStatistic('total')">Total</a>
+        </div>
+
+        <div class="flex justify-between items-center space-x-2 my-2">
+            <a v-if="!this.yearInterval" class="flex text-2xl text-blue-800 hover:text-blue-700 cursor-pointer select-none duration-200 ease-in-out" @click="loopYears(true)">▶</a>
+            <a v-if="this.yearInterval" class="flex text-2xl text-blue-800 hover:text-blue-700 cursor-pointer select-none duration-200 ease-in-out" @click="loopYears(false)">■</a>
+            <input type="range" min="2011" max="2019" v-bind:value="activeYear" class="w-full" @input="setActiveYear($event)">
+            <span class="flex w-12 text-sm font-medium text-gray-500">{{activeYear}}</span>
         </div>
 
         <h2 class="text-xl font-serif mt-4">Features</h2>
@@ -44,12 +51,14 @@ export default {
     props: {
         municipalityMap: Boolean,
         activeStatistic: String,
-        activeFeature: String
+        activeFeature: String,
+        activeYear: Number
     },
     data() {
         return {
             features: {},
-            opened: {}
+            opened: {},
+            yearInterval: null
         }
     },
     computed: {
@@ -63,6 +72,21 @@ export default {
         },
         toggleActiveFeature(value) {
             this.$emit('switchFeature', value);
+        },
+        setActiveYear(event) {
+            this.$emit('switchYear', event.target.value);
+        },
+        loopYears(start) {
+            if(start && !this.yearInterval) {
+                const vm = this;
+                vm.setActiveYear({target: {value: vm.activeYear == 2019 ? 2011 : vm.activeYear + 1}});
+                this.yearInterval = setInterval(function(){
+                    vm.setActiveYear({target: {value: vm.activeYear == 2019 ? 2011 : vm.activeYear + 1}});
+                }, 2000);
+            } else {
+                clearInterval(this.yearInterval);
+                this.yearInterval = null;
+            }
         }
     },
     async mounted() {
@@ -79,13 +103,24 @@ export default {
         Object.keys(this.features).forEach(key => {
             this.opened[key] = false;
         });
+    },
+    watch: {
+        // loopingYears: function() {
+        //     if(this.loopingYears) {
+        //         setInterval(function(){
+        //             this.setActiveYear({target: {value: this.activeYear == 2019 ? 2011 : this.activeYear + 1}});
+        //         }, 5000);
+        //     } else {
+        //         clearInterval();
+        //     }
+        // }
     }
 }
 </script>
 
 <style>
 .button-group {
-  @apply flex-1 inline-flex justify-center items-center px-2 border border-blue-800 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 cursor-pointer select-none duration-200 ease-in-out;
+  @apply flex-1 inline-flex justify-center items-center px-2 border border-blue-800 bg-white text-sm font-medium text-gray-500 hover:bg-gray-100 cursor-pointer select-none duration-200 ease-in-out;
 }
 
 .button-group.leftmost {
@@ -98,5 +133,23 @@ export default {
 
 .active {
   @apply bg-blue-800 text-white hover:bg-blue-700;
+}
+
+input[type=range] {
+    appearance: none;
+    @apply my-2;
+}
+input[type=range]:focus {
+    outline: none;
+}
+input[type=range]::-webkit-slider-runnable-track {
+    @apply bg-white h-3.5 border border-solid border-blue-800 rounded-md hover:bg-gray-100 cursor-pointer select-none duration-200 ease-in-out;
+}
+input[type=range]::-webkit-slider-thumb {
+    appearance: none;
+    @apply w-6 h-6 -mt-1.5 bg-blue-800 rounded-xl hover:bg-blue-700 cursor-pointer select-none duration-200 ease-in-out;
+}
+input[type=range]:focus::-webkit-slider-runnable-track {
+    @apply bg-gray-100;
 }
 </style>

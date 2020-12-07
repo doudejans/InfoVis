@@ -6,14 +6,17 @@
       <net-worth-map class="flex w-2/3 m-2 max-h-screen"
         v-bind:municipalityMap="municipalityMap"
         v-bind:activeStatistic="activeStatistic"
-        v-bind:activeFeature="activeFeature"/>
+        v-bind:activeFeature="activeFeature"
+        v-bind:activeYear="activeYear"/>
       <sidebar class="w-1/3 m-2"
         v-bind:municipalityMap="municipalityMap"
         v-bind:activeStatistic="activeStatistic"
         v-bind:activeFeature="activeFeature"
+        v-bind:activeYear="activeYear"
         @switchMap="switchMap"
         @switchStatistic="switchStatistic"
-        @switchFeature="switchFeature"/>
+        @switchFeature="switchFeature"
+        @switchYear="switchYear"/>
     </div>
   </div>
 </template>
@@ -34,7 +37,8 @@ export default {
     return {
       municipalityMap: true,
       activeStatistic: 'mean',
-      activeFeature: 1050010
+      activeFeature: 1050010,
+      activeYear: 2019
     }
   },
   methods: {
@@ -45,7 +49,10 @@ export default {
       this.activeStatistic = newValue;
     },
     switchFeature(newValue) {
-      this.activeFeature = newValue;
+      this.activeFeature = parseInt(newValue);
+    },
+    switchYear(newValue) {
+      this.activeYear = parseInt(newValue);
     }
   }
 }
