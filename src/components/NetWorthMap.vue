@@ -107,6 +107,10 @@ export default {
                 .on('mouseout', function(r) {
                     vm.hideTooltip();
                 });
+
+            if (this.tooltipVisible) {
+                this.tooltipValue = parseFloat(this.getCurrentStatisticValue(this.data.find(nw => nw.RegioS == this.activeRegion)));
+            }
         },
         filter() {
             
