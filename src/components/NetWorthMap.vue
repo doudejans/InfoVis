@@ -39,7 +39,11 @@ export default {
             tooltipValue: 0,
             mouseX: 0,
             mouseY: 0,
-            data: []
+            data: [],
+            wealthMunicipalities: [],
+            wealthProvinces: [],
+            municipalityRegions: {},
+            provinceRegions: {},
         }
     },
     methods: {
@@ -57,7 +61,7 @@ export default {
                     return row.GemiddeldVermogen_4;
             }
         },
-        async initMap(municipalityMap) {
+        initMap(municipalityMap) {
             const svg = d3.select("#map").select("svg");
             const box = d3.select("#map").node();
 
@@ -66,12 +70,7 @@ export default {
             svg.attr("width", width)
                 .attr("height", height);
 
-            var geoRegions;
-            if (municipalityMap) {
-                geoRegions = await d3.json("gemeente_2020.geojson");
-            } else {
-                geoRegions = await d3.json("provincie_2020.geojson");
-            }
+            var geoRegions = municipalityMap ? this.municipalityRegions : this.provinceRegions;
 
             const projection = d3.geoMercator().fitSize([width, height], geoRegions);
             const path = d3.geoPath().projection(projection);
@@ -83,16 +82,12 @@ export default {
                 .attr("d", path)
                 .attr("fill", "white");
         },
-        async fillMap(municipalityMap, activeStatistic, activeFeature) {
+        fillMap(municipalityMap, activeStatistic, activeFeature) {
             const svg = d3.select("#map").select("svg");
             const vm = this;
 
-            var netWorth;
-            if (municipalityMap) {
-                netWorth = await d3.csv('vermogen_gemeenten_modified.csv');
-            } else {
-                netWorth = await d3.csv('vermogen_provincies_modified.csv');
-            }
+            var netWorth = municipalityMap ? this.wealthMunicipalities : this.wealthProvinces;
+
             this.data = netWorth.filter(n => n.Perioden == "2019JJ00").filter(n => n.KenmerkenHuishouden == activeFeature);
             const extent = d3.extent(this.data, nw=> parseFloat(vm.getCurrentStatisticValue(nw)));
             const colorScale = d3.scaleSequential(d3.interpolateViridis).domain(extent);
@@ -135,6 +130,11 @@ export default {
         }
     },
     async mounted() {
+        this.wealthMunicipalities = await d3.csv('vermogen_gemeenten_modified.csv');
+        this.wealthProvinces = await d3.csv('vermogen_provincies_modified.csv');
+        this.municipalityRegions = await d3.json("gemeente_2020.geojson");
+        this.provinceRegions = await d3.json("provincie_2020.geojson");
+
         this.initMap(this.municipalityMap);
         this.fillMap(this.municipalityMap, this.activeStatistic, this.activeFeature);
         window.addEventListener('resize', this.redraw);
@@ -144,10 +144,10 @@ export default {
             this.redraw()
         },
         activeStatistic: function() {
-            this.redraw()
+            this.fillMap(this.municipalityMap, this.activeStatistic, this.activeFeature);
         },
         activeFeature: function() {
-            this.redraw()
+            this.fillMap(this.municipalityMap, this.activeStatistic, this.activeFeature);
         }
     }
 }
