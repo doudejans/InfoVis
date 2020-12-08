@@ -45,6 +45,7 @@
 
 <script>
 import * as d3 from "d3";
+import {groupBy} from "lodash";
 
 export default {
     name: 'Sidebar',
@@ -92,14 +93,7 @@ export default {
     async mounted() {
         const parsed_csv = await d3.csv("metadata_kenmerken_en.csv");
 
-        var groupBy = function(xs, key) {
-            return xs.reduce(function(rv, x) {
-                (rv[x[key]] = rv[x[key]] || []).push(x);
-                return rv;
-            }, {});
-        };
-
-        this.features = groupBy(parsed_csv, 'Category');
+        this.features = groupBy(parsed_csv, r => [r.Category]);
         Object.keys(this.features).forEach(key => {
             this.opened[key] = false;
         });
