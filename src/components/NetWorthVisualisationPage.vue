@@ -37,7 +37,7 @@ export default {
     return {
       municipalityMap: true,
       activeStatistic: 'mean',
-      activeFeature: 1050010,
+      activeFeature: '1050010',
       activeYear: 2019
     }
   },
@@ -49,7 +49,7 @@ export default {
       this.activeStatistic = newValue;
     },
     switchFeature(newValue) {
-      this.activeFeature = parseInt(newValue);
+      this.activeFeature = newValue.toString();
     },
     switchYear(newValue) {
       this.activeYear = parseInt(newValue);

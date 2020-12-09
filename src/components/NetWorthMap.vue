@@ -27,7 +27,7 @@ export default {
     props: {
         municipalityMap: Boolean,
         activeStatistic: String,
-        activeFeature: Number,
+        activeFeature: String,
         activeYear: Number
     },
     components: {
@@ -59,6 +59,7 @@ export default {
                     break;
                 case 'total':
                     return row.TotaalVermogen_3;
+                    break;
                 default:
                     return row.GemiddeldVermogen_4;
             }
@@ -89,9 +90,11 @@ export default {
             const vm = this;
 
             var netWorth = municipalityMap ? this.wealthMunicipalities : this.wealthProvinces;
+            var features = municipalityMap ? this.groupedFeaturesMunicipalities : this.groupedFeaturesProvinces;
 
             this.data = netWorth[[activeYear + "JJ00", activeFeature]];
-            const extent = d3.extent(this.data, nw=> parseFloat(vm.getCurrentStatisticValue(nw)));
+
+            var extent = d3.extent(features[activeFeature], f => parseFloat(vm.getCurrentStatisticValue(f)));
             const colorScale = d3.scaleSequential(d3.interpolateViridis).domain(extent);
 
             const map = new Map(this.data.map(row => [row.RegioS, row]))
@@ -143,9 +146,11 @@ export default {
     async mounted() {
         const municipalityTable = await d3.csv('vermogen_gemeenten_modified.csv');
         this.wealthMunicipalities = groupBy(municipalityTable, w => [w.Perioden, w.KenmerkenHuishouden]);
+        this.groupedFeaturesMunicipalities = groupBy(municipalityTable, w => [w.KenmerkenHuishouden]);
 
         const provinceTable = await d3.csv('vermogen_provincies_modified.csv');
         this.wealthProvinces = groupBy(provinceTable, w => [w.Perioden, w.KenmerkenHuishouden]);
+        this.groupedFeaturesProvinces = groupBy(municipalityTable, w => [w.KenmerkenHuishouden]);
 
         this.municipalityRegions = await d3.json("gemeente_2020.geojson");
         this.provinceRegions = await d3.json("provincie_2020.geojson");

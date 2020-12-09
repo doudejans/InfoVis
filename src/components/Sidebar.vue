@@ -52,7 +52,7 @@ export default {
     props: {
         municipalityMap: Boolean,
         activeStatistic: String,
-        activeFeature: Number,
+        activeFeature: String,
         activeYear: Number
     },
     data() {
