@@ -99,7 +99,7 @@ export default {
         initLegend() {
             const legendWrapper = this.svg.append("g")
                 .attr("id", "legend-wrapper")
-                .attr("transform", "translate(20,20)");
+                .attr("transform", "translate(0,20)");
 
             legendWrapper.append("rect")
                 .attr("id", "legend-rect")

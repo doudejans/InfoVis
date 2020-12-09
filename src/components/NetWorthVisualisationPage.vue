@@ -3,12 +3,12 @@
     <h1 class="text-4xl font-serif">Household wealth distribution</h1>
 
     <div class="container mx-auto flex-1 flex">
-      <net-worth-map class="flex w-2/3 m-2 max-h-screen"
+      <net-worth-map class="flex w-2/3 mt-2 mr-2 mb-2 max-h-screen"
         v-bind:municipalityMap="municipalityMap"
         v-bind:activeStatistic="activeStatistic"
         v-bind:activeFeature="activeFeature"
         v-bind:activeYear="activeYear"/>
-      <sidebar class="w-1/3 m-2"
+      <sidebar class="w-1/3 mt-2 ml-2 mb-2"
         v-bind:municipalityMap="municipalityMap"
         v-bind:activeStatistic="activeStatistic"
         v-bind:activeFeature="activeFeature"
