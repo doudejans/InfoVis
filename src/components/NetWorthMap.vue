@@ -142,6 +142,7 @@ export default {
             }
         },
         drawLegend(colorScale) {
+            this.svg.select("#linear-gradient").selectAll("stop").remove();
             this.svg.select("#linear-gradient").selectAll("stop")
                 .data(colorScale.ticks().map((t, i, n) => ({ offset: `${100*i/n.length}%`, color: colorScale(t) })))
                 .enter().append("stop")
