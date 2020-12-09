@@ -83,6 +83,30 @@ export default {
                 .attr("class", function(d) { return "region " + d.id; })
                 .attr("d", path)
                 .attr("fill", "white");
+
+            svg.append("defs")
+                .append("linearGradient")
+                .attr("id", "linear-gradient")
+                .attr("x1", "0%")
+                .attr("y1", "0%")
+                .attr("x2", "0%")
+                .attr("y2", "100%")
+
+            const legendWrapper = svg.append("g")
+                .attr("id", "legend-wrapper")
+                .attr("transform", "translate(20,20)");
+
+            legendWrapper.append("rect")
+                .attr("id", "legend-rect")
+                .attr("y", 10);
+
+            legendWrapper.append("text")
+                .attr("id", "legend-title")
+                .attr("y", 0);
+
+            legendWrapper.append("g")
+                .attr("id", "legend-axis")
+                .attr("transform", "translate(0,10)");
         },
         fillMap(municipalityMap, activeStatistic, activeFeature, activeYear) {
             const svg = d3.select("#map").select("svg");
@@ -91,7 +115,7 @@ export default {
             var netWorth = municipalityMap ? this.wealthMunicipalities : this.wealthProvinces;
 
             this.data = netWorth[[activeYear + "JJ00", activeFeature]];
-            const extent = d3.extent(this.data, nw=> parseFloat(vm.getCurrentStatisticValue(nw)));
+            const extent = d3.extent(this.data, nw=>parseFloat(vm.getCurrentStatisticValue(nw)));
             const colorScale = d3.scaleSequential(d3.interpolateViridis).domain(extent);
 
             const map = new Map(this.data.map(row => [row.RegioS, row]))
@@ -107,6 +131,30 @@ export default {
                 .on('mouseout', function(r) {
                     vm.hideTooltip();
                 });
+            
+            svg.select("#linear-gradient").selectAll("stop")
+                .data(colorScale.ticks().map((t, i, n) => ({ offset: `${100*i/n.length}%`, color: colorScale(t) })))
+                .enter().append("stop")
+                .attr("offset", d => d.offset)
+                .attr("stop-color", d => d.color);
+            
+            svg.select("#legend-rect")
+                .attr("width", 12)
+                .attr("height", 200)
+                .style("fill", "url(#linear-gradient)");
+            
+            const axis = d3.axisRight(d3.scaleLinear().domain(extent).range([0, 200]))
+                .ticks(5)
+                .tickSize(12)
+                .tickPadding(8);
+
+            svg.select("#legend-axis")
+                .call(axis);
+
+            const unit = this.activeStatistic == 'total' ? 'billions' : 'thousands'
+
+            svg.select("#legend-title")
+                .text(this.activeStatistic.capitalize() + " wealth in " + unit);
 
             if (this.tooltipVisible) {
                 this.tooltipValue = parseFloat(this.getCurrentStatisticValue(this.data.find(nw => nw.RegioS == this.activeRegion)));
@@ -174,6 +222,10 @@ export default {
 path {
   stroke: #FFF;
   stroke-width: 0.2px;
+}
+
+#legend-title {
+    @apply font-bold text-xs;
 }
 
 </style>
