@@ -202,7 +202,7 @@ export default {
 
         const provinceTable = await d3.csv('vermogen_provincies_modified.csv');
         this.wealthProvinces = groupBy(provinceTable, w => [w.Perioden, w.KenmerkenHuishouden]);
-        this.groupedFeaturesProvinces = groupBy(municipalityTable, w => [w.KenmerkenHuishouden]);
+        this.groupedFeaturesProvinces = groupBy(provinceTable, w => [w.KenmerkenHuishouden]);
 
         this.municipalityRegions = await d3.json("gemeente_2020.geojson");
         this.provinceRegions = await d3.json("provincie_2020.geojson");
