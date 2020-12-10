@@ -15,7 +15,7 @@
                 </div>
             </p>
         </div>
-        <sparkline width=100 height=50 />
+        <sparkline class="w-10 h-full"/>
     </div>
 </template>
 
