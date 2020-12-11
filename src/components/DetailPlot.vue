@@ -26,7 +26,7 @@ export default {
             svg: null,
             width: null,
             height: null,
-            margin: {top: 5, right: 45, bottom: 30, left: 45}
+            margin: {top: 5, right: 10, bottom: 30, left: 38}
         }
     },
     computed: {
@@ -78,13 +78,13 @@ export default {
                 .attr("transform", `translate(${this.margin.left},0)`)
                 .call(d3.axisLeft(y)
                     .tickSizeOuter(0)
-                    .tickSizeInner(15))
+                    .tickSizeInner(10))
                 .select(".domain").remove();
             
             this.svg.selectAll("line.horizontalGrid").data(y.ticks()).enter()
                 .append("line")
                     .attr("class", "grid")
-                    .attr("x1", this.margin.right - 5)
+                    .attr("x1", this.margin.left)
                     .attr("x2", this.width - this.margin.right)
                     .attr("y1", function(d){ return y(d);})
                     .attr("y2", function(d){ return y(d);});

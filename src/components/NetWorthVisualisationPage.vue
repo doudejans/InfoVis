@@ -17,7 +17,10 @@
 
       <div class="w-1/3 ml-2 mb-2">
         <h2 class="text-xl font-serif">{{activeStatistic.capitalize()}} wealth over time</h2>
-        <h3 class="text-xs uppercase font-bold text-gray-600 mb-2">Netherlands</h3>
+        <div class="flex justify-between">
+          <h3 class="text-xs uppercase font-bold text-gray-600 mb-2">Netherlands</h3>
+          <h4 class="text-xs font-light text-gray-400">x 1000 EUR</h4>
+        </div>
         <detail-plot v-if="provinceRegions" class="flex w-full h-52"
           :activeFeature="activeFeature"
           :activeStatistic="activeStatistic"
