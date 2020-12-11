@@ -4,15 +4,17 @@
 
     <div class="container mx-auto flex-1 flex">
       <net-worth-map class="flex w-2/3 mt-2 mr-2 mb-2 max-h-screen"
-        v-bind:municipalityMap="municipalityMap"
-        v-bind:activeStatistic="activeStatistic"
-        v-bind:activeFeature="activeFeature"
-        v-bind:activeYear="activeYear"/>
+        :municipalityMap="municipalityMap"
+        :activeStatistic="activeStatistic"
+        :activeFeature="activeFeature"
+        :activeYear="activeYear"
+        :activeFeatureName="activeFeatureName"
+        :activeFeatureGroup="activeFeatureGroup" />
       <sidebar class="w-1/3 mt-2 ml-2 mb-2"
-        v-bind:municipalityMap="municipalityMap"
-        v-bind:activeStatistic="activeStatistic"
-        v-bind:activeFeature="activeFeature"
-        v-bind:activeYear="activeYear"
+        :municipalityMap="municipalityMap"
+        :activeStatistic="activeStatistic"
+        :activeFeature="activeFeature"
+        :activeYear="activeYear"
         @switchMap="switchMap"
         @switchStatistic="switchStatistic"
         @switchFeature="switchFeature"
@@ -38,7 +40,9 @@ export default {
       municipalityMap: true,
       activeStatistic: 'mean',
       activeFeature: '1050010',
-      activeYear: 2019
+      activeYear: 2019,
+      activeFeatureGroup: "Total",
+      activeFeatureName: "Private households"
     }
   },
   methods: {
@@ -48,8 +52,10 @@ export default {
     switchStatistic(newValue) {
       this.activeStatistic = newValue;
     },
-    switchFeature(newValue) {
-      this.activeFeature = newValue.toString();
+    switchFeature({feature, featureName, featureGroup}) {
+      this.activeFeature = feature.toString();
+      this.activeFeatureName = featureName;
+      this.activeFeatureGroup = featureGroup;
     },
     switchYear(newValue) {
       this.activeYear = parseInt(newValue);

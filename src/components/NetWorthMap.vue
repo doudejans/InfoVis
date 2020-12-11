@@ -8,8 +8,14 @@
             :mouseY="mouseY"
             :valueDescription="activeStatistic.capitalize() + ' wealth'"
             :value="tooltipValue"
-            :valueUnit="activeStatistic == 'total' ? 'b' : 'k'"/
-            :sparklineData="tooltipSparklineData">
+            :valueUnit="activeStatistic == 'total' ? 'x 1B EUR' : 'x 1000 EUR'"
+            :sparklineData="tooltipSparklineData" 
+            :householdFeature="activeFeatureName"
+            :featureGroup="activeFeatureGroup" 
+            :householdNumber="tooltipHouseholdNumber"
+            :householdPercentage="tooltipHouseholdPercentage"
+            :tooltipHeight="tooltipHeight" 
+            @changeHeight="setTooltipHeight"/>
     </div>
 </template>
 
@@ -29,6 +35,8 @@ export default {
         municipalityMap: Boolean,
         activeStatistic: String,
         activeFeature: String,
+        activeFeatureName: String,
+        activeFeatureGroup: String,
         activeYear: Number
     },
     components: {
@@ -41,6 +49,9 @@ export default {
             activeRegionName: "",
             tooltipSparklineData: [],
             tooltipValue: 0,
+            tooltipHouseholdNumber: 0,
+            tooltipHouseholdPercentage: 0,
+            tooltipHeight: 0,
             mouseX: 0,
             mouseY: 0,
             data: [],
@@ -48,7 +59,7 @@ export default {
             wealthProvinces: {},
             municipalityRegions: {},
             provinceRegions: {},
-            svg: null
+            svg: null,
         }
     },
     methods: {
@@ -141,9 +152,12 @@ export default {
                 });
 
             this.drawLegend(colorScale)
-
+            this.tooltipHeight = 0;
             if (this.tooltipVisible) {
-                this.tooltipValue = parseFloat(this.getCurrentStatisticValue(activeYearNetWorth.find(nw => nw.RegioS == this.activeRegion)));
+                const row = activeYearNetWorth.find(nw => nw.RegioS == this.activeRegion);
+                this.tooltipValue = parseFloat(this.getCurrentStatisticValue(row));
+                this.tooltipHouseholdNumber = +row.ParticuliereHuishoudens_1;
+                this.tooltipHouseholdPercentage = +row.ParticuliereHuishoudensRelatief_2;
             }
         },
         drawLegend(colorScale) {
@@ -182,7 +196,10 @@ export default {
                 if (this.activeRegion != data.id) {
                     this.activeRegion = data.id;
                     this.activeRegionName = data.properties.statnaam;
-                    this.tooltipValue = parseFloat(this.getCurrentStatisticValue(this.data[[this.activeYear + "JJ00", this.activeFeature]].find(nw => nw.RegioS == data.id)));
+                    const row = this.data[[this.activeYear + "JJ00", this.activeFeature]].find(nw => nw.RegioS == data.id);
+                    this.tooltipValue = parseFloat(this.getCurrentStatisticValue(row));
+                    this.tooltipHouseholdNumber = +row.ParticuliereHuishoudens_1;
+                    this.tooltipHouseholdPercentage = +row.ParticuliereHuishoudensRelatief_2;
                     this.tooltipSparklineData = range(2011, 2020).map(year => {return {
                         year: new Date("" + year),
                         value: parseFloat(this.getCurrentStatisticValue(this.data[[year + "JJ00", this.activeFeature]].find(nw => nw.RegioS == data.id)))
@@ -199,6 +216,9 @@ export default {
             this.activeRegion = "";
             this.mouseX = 0;
             this.mouseY = 0;
+        },
+        setTooltipHeight(height) {
+            this.tooltipHeight = height;
         }
     },
     async mounted() {
