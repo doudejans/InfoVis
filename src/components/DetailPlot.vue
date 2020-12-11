@@ -25,7 +25,8 @@ export default {
             wealthNetherlands: null,
             svg: null,
             width: null,
-            height: null
+            height: null,
+            margin: {top: 5, right: 45, bottom: 30, left: 45}
         }
     },
     computed: {
@@ -46,34 +47,47 @@ export default {
         initPlot() {
             const box = d3.select("#plot").node();
 
-            var margin = {top: 5, right: 40, bottom: 20, left: 40};
-
-            this.width = box.getBoundingClientRect().width - margin.left - margin.right;
-            this.height = box.getBoundingClientRect().height - margin.top - margin.bottom;
+            this.width = box.getBoundingClientRect().width;
+            this.height = box.getBoundingClientRect().height;
 
             this.svg = d3.select("#plot")
                 .append("svg")
-                    .attr("width", this.width + margin.left + margin.right)
-                    .attr("height", this.height + margin.top + margin.bottom)
-                .append("g")
-                    .attr("transform",
-                        "translate(" + margin.left + "," + margin.top + ")");
+                .attr("width", this.width)
+                .attr("height", this.height);
 
             this.drawData();
         },
         drawData() {
-            d3.select("#plot").select("svg").select("g").selectAll("*").remove();
+            d3.select("#plot").select("svg").selectAll("*").remove();
+
             var data = this.wealthNetherlands[[this.activeFeature]];
-
-            var x = d3.scaleTime().domain([new Date('2010'), new Date('2019')]).range([0, this.width]);
-            this.svg.append("g")
-                .attr("transform", "translate(0," + this.height + ")")
-                .call(d3.axisBottom(x));
-
             const vm = this;
-            var y = d3.scaleLinear().domain([0, d3.max(data, f => +vm.getCurrentStatisticValue(f))]).range([this.height, 0]);
+
+            var x = d3.scaleTime()
+                .domain([new Date(2010, 12), new Date(2019, 1)])
+                .range([this.margin.left, this.width - this.margin.right]);
+            var y = d3.scaleLinear()
+                .domain([0, d3.max(data, f => +vm.getCurrentStatisticValue(f))])
+                .range([this.height - this.margin.bottom, this.margin.top]);
+
             this.svg.append("g")
-                .call(d3.axisLeft(y));
+                .attr("transform", `translate(0,${this.height - this.margin.bottom})`)
+                .call(d3.axisBottom(x))
+                .select(".domain").remove();
+            this.svg.append("g")
+                .attr("transform", `translate(${this.margin.left},0)`)
+                .call(d3.axisLeft(y)
+                    .tickSizeOuter(0)
+                    .tickSizeInner(15))
+                .select(".domain").remove();
+            
+            this.svg.selectAll("line.horizontalGrid").data(y.ticks()).enter()
+                .append("line")
+                    .attr("class", "grid")
+                    .attr("x1", this.margin.right - 5)
+                    .attr("x2", this.width - this.margin.right)
+                    .attr("y1", function(d){ return y(d);})
+                    .attr("y2", function(d){ return y(d);});
 
             this.svg.append("path")
                 .datum(data)
@@ -83,6 +97,16 @@ export default {
                     .x(function(d) { return x(new Date(d.Perioden.slice(0, -4))) })
                     .y(function(d) { return y(vm.getCurrentStatisticValue(d)) })
                     );
+            
+            this.svg.selectAll("dots")
+                .data(data)
+                .enter()
+                .append("circle")
+                    .attr("stroke", "#1E40AF")
+                    .attr("fill", "white")
+                    .attr("cx", function(d) { return x(new Date(d.Perioden.slice(0, -4))) })
+                    .attr("cy", function(d) { return y(vm.getCurrentStatisticValue(d)) })
+                    .attr("r", 3)
         },
         redraw() {
             d3.select("#plot").selectAll("*").remove();
@@ -108,9 +132,24 @@ export default {
 </script>
 
 <style>
+#plot {
+    @apply text-sm text-gray-500;
+}
+
 .plotline {
     fill: none;
     stroke: #1E40AF;
     stroke-width: 3;
+}
+
+.grid {
+    fill: none;
+    shape-rendering: crispEdges;
+
+    @apply stroke-1 stroke-current text-gray-200;
+}
+
+.tick line {
+    visibility: hidden;
 }
 </style>
