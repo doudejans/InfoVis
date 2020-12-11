@@ -39,7 +39,6 @@ export default {
             tooltipVisible: false,
             activeRegion: "",
             activeRegionName: "",
-            activeColor: "",
             tooltipSparklineData: [],
             tooltipValue: 0,
             mouseX: 0,
