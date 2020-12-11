@@ -1,23 +1,57 @@
 <template>
-    <div id="tooltip" class="absolute p-2 bg-white rounded border border-gray-200 border-solid shadow-md text-sm" :style="{left: mouseX + 'px', top: mouseY + 20 + 'px'}">
+    <div id="tooltip" 
+        ref="tooltip-window" 
+        class="absolute p-2 bg-white rounded border border-gray-200 border-solid shadow-md text-sm flex flex-col justify-between" 
+        :style="{left: mouseX + 20 + 'px', top: topPos + 'px', visibility: tooltipHeight > 0 ? 'visible' : 'hidden' }">
         <p class="font-bold font-serif">
-            {{ regionName }}
+                {{ regionName }}
         </p>
-        <p class="font-light">
-            <span class="mr-2">{{valueDescription}}:</span>
-            <div v-if="value">
-                <span class="">{{value}}</span>
-                <span>{{valueUnit}} EUR</span>
+        <div class="flex h-16">
+            <div class="mr-2 mt-2 flex flex-col w-32 h-full justify-center">
+                <p class="font-light">
+                    <span class="mr-2 text-xs font-bold text-gray-600 uppercase">{{valueDescription}}</span>
+                    <div v-if="!isNaN(value)">
+                        <span class="">{{value}}</span>
+                        <span class="ml-1 text-xs text-gray-400">{{valueUnit}}</span>
+                    </div>
+                    <div class="" v-else>
+                        No data available
+                    </div>
+                </p>
             </div>
-            <div class="" v-else>
-                No data available
+            <div class="flex flex-col h-full w-32">
+                <span class="text-xs text-gray-400 text-center w-full">8-year trend</span>
+                <sparkline class="w-full h-full" :data="sparklineData"/>
             </div>
-        </p>
+        </div>
+        <hr class="mt-6 mb-2">
+        <div class="w-64">
+            <p class="">
+                <span class="mr-2 text-xs font-bold text-gray-600 uppercase">{{featureGroup}}</span>
+                <div class="font-light">{{householdFeature}}</div>
+            </p>
+            <div class="flex mt-2">
+                <div class="flex-1">
+                    <span class="mr-2 text-xs font-bold text-gray-600 uppercase">households</span>
+                    <div class="font-light">
+                        {{householdNumber}}
+                        <span class="ml-1 text-xs text-gray-400">x 1000</span>
+                    </div>
+                </div>
+                <div class="flex-1">
+                    <span class="mr-2 text-xs font-bold text-gray-600 uppercase">of total</span>
+                    <div class="font-light">{{householdPercentage}} %</div>
+                </div>
+            </div>
+        </div>
     </div>
 </template>
 
 <script>
+import Sparkline from './Sparkline.vue';
+
 export default {
+    components: { Sparkline },
     name: 'NetWorthMapTooltip',
     props: {
         regionName: String,
@@ -25,16 +59,33 @@ export default {
         mouseY: Number,
         valueDescription: String,
         value: Number,
-        valueUnit: String
+        valueUnit: String,
+        sparklineData: Array,
+        featureGroup: String,
+        householdFeature: String,
+        householdNumber: Number,
+        householdPercentage: Number,
+        tooltipHeight: Number,
     },
     data() {
         return {
+            windowHeight: window.innerHeight,
+        }
+    },
+    updated() {
+        if (this.tooltipHeight == 0) {
+            this.$emit('changeHeight', this.$refs['tooltip-window'].getBoundingClientRect().height);
         }
     },
     computed: {
+        topPos() {
+            return Math.min(this.mouseY + this.tooltipHeight, this.windowHeight - 10) - this.tooltipHeight;
+        }
     },
     methods: {
     }
 }
 </script>
 
+<style scoped>
+</style>

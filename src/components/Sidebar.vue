@@ -32,7 +32,7 @@
                         <li v-for="row in value" :key="row.Key">
                             <a class="flex ml-4 p-1 text-sm font-medium text-gray-500 hover:bg-gray-50 rounded-md cursor-pointer select-none duration-200 ease-in-out"
                                 :class="{active: activeFeature == row.Key}"
-                                @click="toggleActiveFeature(row.Key)">
+                                @click="toggleActiveFeature(row.Key, name, row.Title)">
                                 {{row.Title}}
                             </a>
                         </li>
@@ -71,8 +71,8 @@ export default {
         setActiveStatistic(value) {
             this.$emit('switchStatistic', value);
         },
-        toggleActiveFeature(value) {
-            this.$emit('switchFeature', value);
+        toggleActiveFeature(feature, featureGroup, featureName) {
+            this.$emit('switchFeature', {feature, featureGroup, featureName});
         },
         setActiveYear(event) {
             this.$emit('switchYear', event.target.value);

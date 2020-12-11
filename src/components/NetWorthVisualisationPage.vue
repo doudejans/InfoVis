@@ -1,12 +1,13 @@
 <template>
   <div class="container mx-auto p-4 h-screen flex flex-col">
     <h1 class="text-4xl font-serif">Household wealth distribution</h1>
-
-    <div class="container mx-auto flex-1 flex mt-2">
+    <div class="container mx-auto flex-1 flex">
       <net-worth-map v-if="provinceRegions" class="flex w-2/3 mr-2 mb-2 max-h-screen"
         :municipalityMap="municipalityMap"
         :activeStatistic="activeStatistic"
         :activeFeature="activeFeature"
+        :activeFeatureName="activeFeatureName"
+        :activeFeatureGroup="activeFeatureGroup"
         :activeYear="activeYear"
         :wealthMunicipalities="wealthMunicipalities"
         :groupedFeaturesMunicipalities="groupedFeaturesMunicipalities"
@@ -67,6 +68,8 @@ export default {
       municipalityMap: true,
       activeStatistic: 'mean',
       activeFeature: '1050010',
+      activeFeatureGroup: "Total",
+      activeFeatureName: "Private households",
       activeYear: 2019,
       wealthMunicipalities: null,
       groupedFeaturesMunicipalities: null,
@@ -95,8 +98,10 @@ export default {
     switchStatistic(newValue) {
       this.activeStatistic = newValue;
     },
-    switchFeature(newValue) {
-      this.activeFeature = newValue.toString();
+    switchFeature({feature, featureName, featureGroup}) {
+      this.activeFeature = feature.toString();
+      this.activeFeatureName = featureName;
+      this.activeFeatureGroup = featureGroup;
     },
     switchYear(newValue) {
       this.activeYear = parseInt(newValue);
