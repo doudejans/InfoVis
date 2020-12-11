@@ -23,7 +23,9 @@ export default {
     data() {
         return {
             wealthNetherlands: null,
-            svg: null
+            svg: null,
+            width: null,
+            height: null
         }
     },
     computed: {
@@ -46,26 +48,30 @@ export default {
 
             var margin = {top: 5, right: 40, bottom: 20, left: 40};
 
-            var width = box.getBoundingClientRect().width - margin.left - margin.right,
-                height = box.getBoundingClientRect().height - margin.top - margin.bottom;
+            this.width = box.getBoundingClientRect().width - margin.left - margin.right;
+            this.height = box.getBoundingClientRect().height - margin.top - margin.bottom;
 
             this.svg = d3.select("#plot")
                 .append("svg")
-                    .attr("width", width + margin.left + margin.right)
-                    .attr("height", height + margin.top + margin.bottom)
+                    .attr("width", this.width + margin.left + margin.right)
+                    .attr("height", this.height + margin.top + margin.bottom)
                 .append("g")
                     .attr("transform",
                         "translate(" + margin.left + "," + margin.top + ")");
 
+            this.drawData();
+        },
+        drawData() {
+            d3.select("#plot").select("svg").select("g").selectAll("*").remove();
             var data = this.wealthNetherlands[[this.activeFeature]];
 
-            var x = d3.scaleTime().domain([new Date('2010'), new Date('2019')]).range([0, width]);
+            var x = d3.scaleTime().domain([new Date('2010'), new Date('2019')]).range([0, this.width]);
             this.svg.append("g")
-                .attr("transform", "translate(0," + height + ")")
+                .attr("transform", "translate(0," + this.height + ")")
                 .call(d3.axisBottom(x));
 
             const vm = this;
-            var y = d3.scaleLinear().domain([0, d3.max(data, f => +vm.getCurrentStatisticValue(f))]).range([height, 0]);
+            var y = d3.scaleLinear().domain([0, d3.max(data, f => +vm.getCurrentStatisticValue(f))]).range([this.height, 0]);
             this.svg.append("g")
                 .call(d3.axisLeft(y));
 
@@ -75,9 +81,10 @@ export default {
                 .attr("stroke", "#1E40AF")
                 .attr("stroke-width", 3)
                 .attr("d", d3.line()
+                    .curve(d3.curveCatmullRom.alpha(0.1))
                     .x(function(d) { return x(new Date(d.Perioden.slice(0, -4))) })
                     .y(function(d) { return y(vm.getCurrentStatisticValue(d)) })
-                    )
+                    );
         },
         redraw() {
             d3.select("#plot").selectAll("*").remove();
@@ -88,14 +95,14 @@ export default {
         const netherlandsTable = await d3.csv('vermogen_nederland_modified.csv');
         this.wealthNetherlands = groupBy(netherlandsTable, w => [w.KenmerkenHuishouden]);
 
-        this.initPlot();
+        this.redraw();
     },
     watch: {
         activeStatistic: function() {
-            this.redraw();
+            this.drawData();
         },
         activeFeature: function() {
-            this.redraw();
+            this.drawData();
         }
     }
 }
