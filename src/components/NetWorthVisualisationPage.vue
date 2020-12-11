@@ -16,6 +16,8 @@
         :provinceRegions="provinceRegions"/>
 
       <div class="w-1/3 ml-2 mb-2">
+        <h2 class="text-xl font-serif">{{activeStatistic.capitalize()}} wealth over time</h2>
+        <h3 class="text-xs uppercase font-bold text-gray-600 mb-2">Netherlands</h3>
         <detail-plot v-if="provinceRegions" class="flex w-full h-52"
           :activeFeature="activeFeature"
           :activeStatistic="activeStatistic"
@@ -27,7 +29,7 @@
           :municipalityRegions="municipalityRegions"
           :provinceRegions="provinceRegions"/>
 
-        <sidebar class="mt-2 w-full"
+        <sidebar class="mt-4 w-full"
           :municipalityMap="municipalityMap"
           :activeStatistic="activeStatistic"
           :activeFeature="activeFeature"

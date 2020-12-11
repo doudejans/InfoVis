@@ -145,8 +145,9 @@ export default {
 .grid {
     fill: none;
     shape-rendering: crispEdges;
+    stroke-dasharray: 2px;
 
-    @apply stroke-1 stroke-current text-gray-200;
+    @apply stroke-1 stroke-current text-gray-300;
 }
 
 .tick line {
