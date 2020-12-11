@@ -13,7 +13,9 @@
             :householdFeature="activeFeatureName"
             :featureGroup="activeFeatureGroup" 
             :householdNumber="tooltipHouseholdNumber"
-            :householdPercentage="tooltipHouseholdPercentage"/>
+            :householdPercentage="tooltipHouseholdPercentage"
+            :tooltipHeight="tooltipHeight" 
+            @changeHeight="setTooltipHeight"/>
     </div>
 </template>
 
@@ -49,6 +51,7 @@ export default {
             tooltipValue: 0,
             tooltipHouseholdNumber: 0,
             tooltipHouseholdPercentage: 0,
+            tooltipHeight: 0,
             mouseX: 0,
             mouseY: 0,
             data: [],
@@ -149,7 +152,7 @@ export default {
                 });
 
             this.drawLegend(colorScale)
-
+            this.tooltipHeight = 0;
             if (this.tooltipVisible) {
                 const row = activeYearNetWorth.find(nw => nw.RegioS == this.activeRegion);
                 this.tooltipValue = parseFloat(this.getCurrentStatisticValue(row));
@@ -213,6 +216,9 @@ export default {
             this.activeRegion = "";
             this.mouseX = 0;
             this.mouseY = 0;
+        },
+        setTooltipHeight(height) {
+            this.tooltipHeight = height;
         }
     },
     async mounted() {

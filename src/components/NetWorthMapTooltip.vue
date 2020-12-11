@@ -1,5 +1,8 @@
 <template>
-    <div id="tooltip" class="absolute p-2 bg-white rounded border border-gray-200 border-solid shadow-md text-sm flex flex-col justify-between" :style="{left: mouseX + 20 + 'px', top: mouseY + 'px'}">
+    <div id="tooltip" 
+        ref="tooltip-window" 
+        class="absolute p-2 bg-white rounded border border-gray-200 border-solid shadow-md text-sm flex flex-col justify-between" 
+        :style="{left: mouseX + 20 + 'px', top: topPos + 'px', visibility: tooltipHeight > 0 ? 'visible' : 'hidden' }">
         <p class="font-bold font-serif">
                 {{ regionName }}
         </p>
@@ -62,12 +65,22 @@ export default {
         householdFeature: String,
         householdNumber: Number,
         householdPercentage: Number,
+        tooltipHeight: Number,
     },
     data() {
         return {
+            windowHeight: window.innerHeight,
+        }
+    },
+    updated() {
+        if (this.tooltipHeight == 0) {
+            this.$emit('changeHeight', this.$refs['tooltip-window'].getBoundingClientRect().height);
         }
     },
     computed: {
+        topPos() {
+            return Math.min(this.mouseY + this.tooltipHeight, this.windowHeight - 10) - this.tooltipHeight;
+        }
     },
     methods: {
     }
@@ -75,7 +88,4 @@ export default {
 </script>
 
 <style scoped>
-#tooltip {
-    height: 250px;
-}
 </style>
