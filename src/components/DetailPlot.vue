@@ -66,8 +66,12 @@ export default {
             var x = d3.scaleTime()
                 .domain([new Date(2010, 12), new Date(2019, 1)])
                 .range([this.margin.left, this.width - this.margin.right]);
+
+            const min = d3.min(data, f => +vm.getCurrentStatisticValue(f));
+            const max = d3.max(data, f => +vm.getCurrentStatisticValue(f));
+
             var y = d3.scaleLinear()
-                .domain([0, d3.max(data, f => +vm.getCurrentStatisticValue(f))])
+                .domain([min, max])
                 .range([this.height - this.margin.bottom, this.margin.top]);
 
             this.svg.append("g")
