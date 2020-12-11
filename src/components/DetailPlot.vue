@@ -77,9 +77,7 @@ export default {
 
             this.svg.append("path")
                 .datum(data)
-                .attr("fill", "none")
-                .attr("stroke", "#1E40AF")
-                .attr("stroke-width", 3)
+                .attr("class", "plotline")
                 .attr("d", d3.line()
                     .curve(d3.curveCatmullRom.alpha(0.1))
                     .x(function(d) { return x(new Date(d.Perioden.slice(0, -4))) })
@@ -96,6 +94,7 @@ export default {
         this.wealthNetherlands = groupBy(netherlandsTable, w => [w.KenmerkenHuishouden]);
 
         this.redraw();
+        window.addEventListener('resize', this.redraw);
     },
     watch: {
         activeStatistic: function() {
@@ -108,3 +107,10 @@ export default {
 }
 </script>
 
+<style>
+.plotline {
+    fill: none;
+    stroke: #1E40AF;
+    stroke-width: 3;
+}
+</style>
