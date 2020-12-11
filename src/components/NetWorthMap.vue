@@ -6,15 +6,16 @@
             :regionName="activeRegionName"
             :mouseX="mouseX"
             :mouseY="mouseY"
-            v-bind:valueDescription="this.activeStatistic.capitalize() + ' wealth'"
+            :valueDescription="activeStatistic.capitalize() + ' wealth'"
             :value="tooltipValue"
-            v-bind:valueUnit="this.activeStatistic == 'total' ? 'b' : 'k'"/>
+            :valueUnit="activeStatistic == 'total' ? 'b' : 'k'"/
+            :sparklineData="tooltipSparklineData">
     </div>
 </template>
 
 <script>
 import * as d3 from "d3";
-import {groupBy} from "lodash";
+import {groupBy, range} from "lodash";
 
 import NetWorthMapTooltip from "./NetWorthMapTooltip.vue";
 
@@ -38,6 +39,7 @@ export default {
             tooltipVisible: false,
             activeRegion: "",
             activeRegionName: "",
+            tooltipSparklineData: [],
             tooltipValue: 0,
             mouseX: 0,
             mouseY: 0,
@@ -116,15 +118,15 @@ export default {
         fillMap(municipalityMap, activeStatistic, activeFeature, activeYear) {
             const vm = this;
 
-            var netWorth = municipalityMap ? this.wealthMunicipalities : this.wealthProvinces;
+            this.data = municipalityMap ? this.wealthMunicipalities : this.wealthProvinces;
             var features = municipalityMap ? this.groupedFeaturesMunicipalities : this.groupedFeaturesProvinces;
 
-            this.data = netWorth[[activeYear + "JJ00", activeFeature]];
+            const activeYearNetWorth = this.data[[activeYear + "JJ00", activeFeature]];
 
             const extent = d3.extent(features[activeFeature], f => parseFloat(vm.getCurrentStatisticValue(f)));
             const colorScale = d3.scaleSequential(d3.interpolateViridis).domain(extent);
 
-            const map = new Map(this.data.map(row => [row.RegioS, row]))
+            const map = new Map(activeYearNetWorth.map(row => [row.RegioS, row]))
 
             this.svg.selectAll(".region")
                 .attr("fill", function(d) {
@@ -141,13 +143,13 @@ export default {
             this.drawLegend(colorScale)
 
             if (this.tooltipVisible) {
-                this.tooltipValue = parseFloat(this.getCurrentStatisticValue(this.data.find(nw => nw.RegioS == this.activeRegion)));
+                this.tooltipValue = parseFloat(this.getCurrentStatisticValue(activeYearNetWorth.find(nw => nw.RegioS == this.activeRegion)));
             }
         },
         drawLegend(colorScale) {
             this.svg.select("#linear-gradient").selectAll("stop").remove();
             this.svg.select("#linear-gradient").selectAll("stop")
-                .data(colorScale.ticks().map((t, i, n) => ({ offset: `${100*i/n.length}%`, color: colorScale(t) })))
+                .data(colorScale.ticks().reverse().map((t, i, n) => ({ offset: `${100*i/n.length}%`, color: colorScale(t) })))
                 .enter().append("stop")
                 .attr("offset", d => d.offset)
                 .attr("stop-color", d => d.color);
@@ -157,7 +159,7 @@ export default {
                 .attr("height", 200)
                 .style("fill", "url(#linear-gradient)");
             
-            const axis = d3.axisRight(d3.scaleLinear().domain(colorScale.domain()).range([0, 200]))
+            const axis = d3.axisRight(d3.scaleLinear().domain(colorScale.domain()).range([200, 0]))
                 .ticks(5)
                 .tickSize(12)
                 .tickPadding(8);
@@ -180,7 +182,11 @@ export default {
                 if (this.activeRegion != data.id) {
                     this.activeRegion = data.id;
                     this.activeRegionName = data.properties.statnaam;
-                    this.tooltipValue = parseFloat(this.getCurrentStatisticValue(this.data.find(nw => nw.RegioS == data.id)));
+                    this.tooltipValue = parseFloat(this.getCurrentStatisticValue(this.data[[this.activeYear + "JJ00", this.activeFeature]].find(nw => nw.RegioS == data.id)));
+                    this.tooltipSparklineData = range(2011, 2020).map(year => {return {
+                        year: new Date("" + year),
+                        value: parseFloat(this.getCurrentStatisticValue(this.data[[year + "JJ00", this.activeFeature]].find(nw => nw.RegioS == data.id)))
+                    }});
                 }
                 this.mouseX = mouseX;
                 this.mouseY = mouseY;
@@ -239,6 +245,10 @@ path {
 
 #legend-axis .tick line {
     color: white;
+}
+
+#legend-axis path {
+    stroke: none;
 }
 
 #legend-axis .tick text {
