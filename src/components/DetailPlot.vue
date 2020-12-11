@@ -110,12 +110,21 @@ export default {
                     .attr("fill", "white")
                     .attr("cx", function(d) { return x(new Date(d.Perioden.slice(0, -4))) })
                     .attr("cy", function(d) { return y(vm.getCurrentStatisticValue(d)) })
-                    .attr("r", 3)
+                    .attr("r", 4)
+            
+            this.fillActiveYear();
+        },
+        fillActiveYear() {
+            const vm = this;
+            this.svg.selectAll("circle")
+                .attr("fill", function(d) {
+                    return d.Perioden == vm.activeYear + "JJ00" ? "white" : "#1E40AF";
+                });
         },
         redraw() {
             d3.select("#plot").selectAll("*").remove();
             this.initPlot();
-        },
+        }
     },
     async mounted() {
         const netherlandsTable = await d3.csv('vermogen_nederland_modified.csv');
@@ -130,6 +139,9 @@ export default {
         },
         activeFeature: function() {
             this.drawData();
+        },
+        activeYear: function() {
+            this.fillActiveYear();
         }
     }
 }
