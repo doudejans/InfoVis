@@ -44,7 +44,7 @@ export default {
         initPlot() {
             const box = d3.select("#plot").node();
 
-            var margin = {top: 0, right: 40, bottom: 30, left: 40};
+            var margin = {top: 5, right: 40, bottom: 20, left: 40};
 
             var width = box.getBoundingClientRect().width - margin.left - margin.right,
                 height = box.getBoundingClientRect().height - margin.top - margin.bottom;
@@ -65,7 +65,7 @@ export default {
                 .call(d3.axisBottom(x));
 
             const vm = this;
-            var y = d3.scaleLinear().domain([0, d3.max(data, f => vm.getCurrentStatisticValue(f))]).range([height, 0]);
+            var y = d3.scaleLinear().domain([0, d3.max(data, f => +vm.getCurrentStatisticValue(f))]).range([height, 0]);
             this.svg.append("g")
                 .call(d3.axisLeft(y));
 
