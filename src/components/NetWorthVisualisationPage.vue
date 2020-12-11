@@ -15,8 +15,8 @@
         :municipalityRegions="municipalityRegions"
         :provinceRegions="provinceRegions"/>
 
-      <div class="container w-1/3 ml-2 mb-2">
-        <detail-plot v-if="provinceRegions" class="flex w-full"
+      <div class="w-1/3 ml-2 mb-2">
+        <detail-plot v-if="provinceRegions" class="flex w-full h-52"
           :activeFeature="activeFeature"
           :activeStatistic="activeStatistic"
           :activeYear="activeYear"
@@ -73,15 +73,15 @@ export default {
   },
   async mounted() {
     const municipalityTable = await d3.csv('vermogen_gemeenten_modified.csv');
-      this.wealthMunicipalities = groupBy(municipalityTable, w => [w.Perioden, w.KenmerkenHuishouden]);
-      this.groupedFeaturesMunicipalities = groupBy(municipalityTable, w => [w.KenmerkenHuishouden]);
+    this.wealthMunicipalities = groupBy(municipalityTable, w => [w.Perioden, w.KenmerkenHuishouden]);
+    this.groupedFeaturesMunicipalities = groupBy(municipalityTable, w => [w.KenmerkenHuishouden]);
 
-      const provinceTable = await d3.csv('vermogen_provincies_modified.csv');
-      this.wealthProvinces = groupBy(provinceTable, w => [w.Perioden, w.KenmerkenHuishouden]);
-      this.groupedFeaturesProvinces = groupBy(provinceTable, w => [w.KenmerkenHuishouden]);
+    const provinceTable = await d3.csv('vermogen_provincies_modified.csv');
+    this.wealthProvinces = groupBy(provinceTable, w => [w.Perioden, w.KenmerkenHuishouden]);
+    this.groupedFeaturesProvinces = groupBy(provinceTable, w => [w.KenmerkenHuishouden]);
 
-      this.municipalityRegions = await d3.json("gemeente_2020.geojson");
-      this.provinceRegions = await d3.json("provincie_2020.geojson");
+    this.municipalityRegions = await d3.json("gemeente_2020.geojson");
+    this.provinceRegions = await d3.json("provincie_2020.geojson");
   },
   methods: {
     switchMap(newValue) {

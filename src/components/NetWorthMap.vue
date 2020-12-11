@@ -219,7 +219,7 @@ export default {
 </script>
 
 <style>
-path {
+#map {
   stroke: #FFF;
   stroke-width: 0.2px;
 }
