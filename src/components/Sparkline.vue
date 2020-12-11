@@ -21,14 +21,16 @@ export default {
     mounted() {
         this.initPlot();
     },
-    initPlot() {
-        const box = d3.select("#sparkline");
-        const {width, height} = box.node().getBoundingClientRect();
+    methods: {
+        initPlot() {
+            const box = d3.select("#sparkline");
+            const {width, height} = box.node().getBoundingClientRect();
 
-        this.svg = box.append("svg")
-            .attr("width", width)
-            .attr("height", height)
-            .attr("class", "border");
+            this.svg = box.append("svg")
+                .attr("width", width)
+                .attr("height", height)
+                .attr("class", "border");
+        }
     }
 }
 </script>

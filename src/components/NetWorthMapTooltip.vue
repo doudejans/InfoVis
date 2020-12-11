@@ -6,7 +6,7 @@
             </p>
             <p class="font-light">
                 <span class="mr-2">{{valueDescription}}:</span>
-                <div v-if="value">
+                <div v-if="!isNaN(value)">
                     <span class="">{{value}}</span>
                     <span>{{valueUnit}} EUR</span>
                 </div>
