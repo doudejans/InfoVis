@@ -1,5 +1,5 @@
 <template>
-    <div id="tooltip" class="absolute p-2 bg-white rounded border border-gray-200 border-solid shadow-md text-sm flex items-center" :style="{left: mouseX + 'px', top: mouseY + 20 + 'px'}">
+    <div id="tooltip" class="absolute p-2 bg-white rounded border border-gray-200 border-solid shadow-md text-sm flex" :style="{left: mouseX + 'px', top: mouseY + 20 + 'px'}">
         <div class="mr-2">
             <p class="font-bold font-serif">
                 {{ regionName }}
@@ -15,7 +15,11 @@
                 </div>
             </p>
         </div>
-        <sparkline class="w-10 h-full"/>
+        <div class="flex flex-col">
+            <span class="text-xs text-gray-400 text-center">8-year trend</span>
+            <sparkline class="w-32 h-14" :data="sparklineData"/>
+        </div>
+        
     </div>
 </template>
 
@@ -31,7 +35,8 @@ export default {
         mouseY: Number,
         valueDescription: String,
         value: Number,
-        valueUnit: String
+        valueUnit: String,
+        sparklineData: Array
     },
     data() {
         return {
