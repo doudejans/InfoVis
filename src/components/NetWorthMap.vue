@@ -147,7 +147,7 @@ export default {
         drawLegend(colorScale) {
             this.svg.select("#linear-gradient").selectAll("stop").remove();
             this.svg.select("#linear-gradient").selectAll("stop")
-                .data(colorScale.ticks().map((t, i, n) => ({ offset: `${100*i/n.length}%`, color: colorScale(t) })))
+                .data(colorScale.ticks().reverse().map((t, i, n) => ({ offset: `${100*i/n.length}%`, color: colorScale(t) })))
                 .enter().append("stop")
                 .attr("offset", d => d.offset)
                 .attr("stop-color", d => d.color);
@@ -157,7 +157,7 @@ export default {
                 .attr("height", 200)
                 .style("fill", "url(#linear-gradient)");
             
-            const axis = d3.axisRight(d3.scaleLinear().domain(colorScale.domain()).range([0, 200]))
+            const axis = d3.axisRight(d3.scaleLinear().domain(colorScale.domain()).range([200, 0]))
                 .ticks(5)
                 .tickSize(12)
                 .tickPadding(8);
@@ -239,6 +239,10 @@ path {
 
 #legend-axis .tick line {
     color: white;
+}
+
+#legend-axis path {
+    stroke: none;
 }
 
 #legend-axis .tick text {
