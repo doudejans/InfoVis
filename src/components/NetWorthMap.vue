@@ -1,6 +1,6 @@
 <template>
     <div id="map">
-        <svg width="960" height="960" viewbox="0 0 1000 1000"></svg>
+        <svg width="960" height="960"></svg>
         <net-worth-map-tooltip
             v-if="tooltipVisible"
             :regionName="activeRegionName"
@@ -37,7 +37,13 @@ export default {
         activeFeature: String,
         activeFeatureName: String,
         activeFeatureGroup: String,
-        activeYear: Number
+        activeYear: Number,
+        wealthMunicipalities: Object,
+        groupedFeaturesMunicipalities: Object,
+        wealthProvinces: Object,
+        groupedFeaturesProvinces: Object,
+        municipalityRegions: Object,
+        provinceRegions: Object,
     },
     components: {
         NetWorthMapTooltip
@@ -55,10 +61,6 @@ export default {
             mouseX: 0,
             mouseY: 0,
             data: [],
-            wealthMunicipalities: {},
-            wealthProvinces: {},
-            municipalityRegions: {},
-            provinceRegions: {},
             svg: null,
         }
     },
@@ -222,17 +224,6 @@ export default {
         }
     },
     async mounted() {
-        const municipalityTable = await d3.csv('vermogen_gemeenten_modified.csv');
-        this.wealthMunicipalities = groupBy(municipalityTable, w => [w.Perioden, w.KenmerkenHuishouden]);
-        this.groupedFeaturesMunicipalities = groupBy(municipalityTable, w => [w.KenmerkenHuishouden]);
-
-        const provinceTable = await d3.csv('vermogen_provincies_modified.csv');
-        this.wealthProvinces = groupBy(provinceTable, w => [w.Perioden, w.KenmerkenHuishouden]);
-        this.groupedFeaturesProvinces = groupBy(provinceTable, w => [w.KenmerkenHuishouden]);
-
-        this.municipalityRegions = await d3.json("gemeente_2020.geojson");
-        this.provinceRegions = await d3.json("provincie_2020.geojson");
-
         this.redraw();
         window.addEventListener('resize', this.redraw);
     },
@@ -254,7 +245,7 @@ export default {
 </script>
 
 <style>
-path {
+#map {
   stroke: #FFF;
   stroke-width: 0.2px;
 }
