@@ -14,18 +14,20 @@
         :wealthProvinces="wealthProvinces"
         :groupedFeaturesProvinces="groupedFeaturesProvinces"
         :municipalityRegions="municipalityRegions"
-        :provinceRegions="provinceRegions"/>
+        :provinceRegions="provinceRegions"
+        @switchRegion="switchRegion"/>
 
       <div class="w-1/3 ml-2 mb-2">
         <h2 class="text-xl font-serif">{{activeStatistic.capitalize()}} wealth over time</h2>
         <div class="flex justify-between">
-          <h3 class="text-xs uppercase font-bold text-gray-600 mb-2">Netherlands</h3>
+          <h3 class="text-xs uppercase font-bold text-gray-600 mb-2">{{getRegionName(activeRegion)}}</h3>
           <h4 class="text-xs font-light text-gray-400">x 1000 EUR</h4>
         </div>
         <detail-plot v-if="provinceRegions" class="flex w-full h-52"
           :activeFeature="activeFeature"
           :activeStatistic="activeStatistic"
           :activeYear="activeYear"
+          :activeRegion="activeRegion"
           :wealthMunicipalities="wealthMunicipalities"
           :groupedFeaturesMunicipalities="groupedFeaturesMunicipalities"
           :wealthProvinces="wealthProvinces"
@@ -71,6 +73,7 @@ export default {
       activeFeatureGroup: "Total",
       activeFeatureName: "Private households",
       activeYear: 2019,
+      activeRegion: null,
       wealthMunicipalities: null,
       groupedFeaturesMunicipalities: null,
       wealthProvinces: null,
@@ -105,6 +108,21 @@ export default {
     },
     switchYear(newValue) {
       this.activeYear = parseInt(newValue);
+    },
+    switchRegion(regionId) {
+      this.activeRegion = regionId;
+    },
+    getRegionName(regionId) {
+      if (!regionId) {
+        return "Netherlands";
+      }
+
+      if (regionId.includes("GM")) {
+        return this.municipalityRegions.features.find(r => r.id == regionId).properties.statnaam;
+      } else if (regionId.includes("PV")) {
+        return this.provinceRegions.features.find(r => r.id == regionId).properties.statnaam;
+      }
+      return "Netherlands"
     }
   }
 }

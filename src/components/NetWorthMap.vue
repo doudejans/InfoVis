@@ -151,6 +151,9 @@ export default {
                 })
                 .on('mouseout', function(r) {
                     vm.hideTooltip();
+                })
+                .on('click', function(r) {
+                    vm.$emit('switchRegion', r.srcElement.__data__.id);
                 });
 
             this.drawLegend(colorScale)

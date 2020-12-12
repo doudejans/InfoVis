@@ -13,6 +13,7 @@ export default {
         activeStatistic: String,
         activeFeature: String,
         activeYear: Number,
+        activeRegion: String,
         wealthMunicipalities: Object,
         groupedFeaturesMunicipalities: Object,
         wealthProvinces: Object,
@@ -59,9 +60,16 @@ export default {
         },
         drawData() {
             d3.select("#plot").select("svg").selectAll("*").remove();
-
-            var data = this.wealthNetherlands[[this.activeFeature]];
             const vm = this;
+            
+            var data = this.wealthNetherlands[[this.activeFeature]];
+            if (this.activeRegion && this.activeRegion.includes("GM")) {
+                data = this.groupedFeaturesMunicipalities[[this.activeFeature]];
+                data = data.filter(r => r.RegioS == this.activeRegion);
+            } else if (this.activeRegion && this.activeRegion.includes("PV")) {
+                data = this.groupedFeaturesProvinces[[this.activeFeature]];
+                data = data.filter(r => r.RegioS == this.activeRegion);
+            }
 
             var x = d3.scaleTime()
                 .domain([new Date(2010, 12), new Date(2019, 1)])
@@ -142,6 +150,9 @@ export default {
         },
         activeYear: function() {
             this.fillActiveYear();
+        },
+        activeRegion: function() {
+            this.drawData();
         }
     }
 }
