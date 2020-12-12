@@ -1,5 +1,11 @@
 <template>
     <div id="plot">
+        <detail-plot-tooltip
+            v-if="tooltipVisible"
+            :value="tooltipValue"
+            :valueUnit="activeStatistic == 'total' ? 'x 1B EUR' : 'x 1000 EUR'" 
+            :mouseX="mouseX"
+            :mouseY="mouseY"/>
     </div>
 </template>
 
@@ -7,8 +13,13 @@
 import * as d3 from "d3";
 import {groupBy} from "lodash";
 
+import DetailPlotTooltip from "./DetailPlotTooltip.vue";
+
 export default {
     name: 'DetailPlot',
+    components: {
+        DetailPlotTooltip
+    },
     props: {
         activeStatistic: String,
         activeFeature: String,
@@ -26,7 +37,11 @@ export default {
             svg: null,
             width: null,
             height: null,
-            margin: {top: 5, right: 10, bottom: 30, left: 38}
+            margin: {top: 5, right: 10, bottom: 30, left: 38},
+            tooltipVisible: false,
+            tooltipValue: 0,
+            mouseX: 0,
+            mouseY: 0
         }
     },
     computed: {
@@ -111,6 +126,15 @@ export default {
                     .attr("cx", function(d) { return x(new Date(d.Perioden.slice(0, -4))) })
                     .attr("cy", function(d) { return y(vm.getCurrentStatisticValue(d)) })
                     .attr("r", 4)
+                    .on("mouseover", e => {
+                        this.tooltipVisible = true;
+                        this.tooltipValue = vm.getCurrentStatisticValue(e.srcElement.__data__);
+                        this.mouseX = e.pageX;
+                        this.mouseY = e.pageY;
+                    })
+                    .on("mouseout", e => {
+                        this.tooltipVisible = false;
+                    });
             
             this.fillActiveYear();
         },
