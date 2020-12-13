@@ -83,11 +83,15 @@ export default {
         initMap(municipalityMap) {
             this.svg = d3.select("#map").select("svg");
             const box = d3.select("#map").node();
+            const vm = this;
 
             const width = box.getBoundingClientRect().width,
                 height = box.getBoundingClientRect().height;
             this.svg.attr("width", width)
-                .attr("height", height);
+                .attr("height", height)
+                .on('click', function(r) {
+                    vm.$emit('switchRegion', null);
+                });
 
             var geoRegions = municipalityMap ? this.municipalityRegions : this.provinceRegions;
 
@@ -154,6 +158,7 @@ export default {
                 })
                 .on('click', function(r) {
                     vm.$emit('switchRegion', r.srcElement.__data__.id);
+                    r.stopPropagation();
                 });
 
             this.drawLegend(colorScale)

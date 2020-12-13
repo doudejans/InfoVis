@@ -20,8 +20,9 @@
       <div class="w-1/3 ml-2 mb-2">
         <h2 class="text-xl font-serif">{{activeStatistic.capitalize()}} wealth over time</h2>
         <div class="flex justify-between">
-          <h3 class="text-xs uppercase font-bold text-gray-600 mb-2">{{getRegionName(activeRegion)}}</h3>
-          <h4 class="text-xs font-light text-gray-400">{{activeStatistic == "total" ? "x 1B EUR" : "x 1000 EUR"}}</h4>
+          <h3 class="text-xs uppercase font-bold text-gray-600 mb-2" v-if="!activeRegion">Netherlands</h3>
+          <h3 class="text-xs uppercase font-bold text-gray-600 mb-2" v-if="activeRegion"><span class="text-blue-800">Netherlands</span> & <span class="text-red-800">{{getRegionName(activeRegion)}}</span></h3>
+          <h4 class="text-xs font-light text-gray-400 text-right">{{activeStatistic == "total" ? "x 1B EUR" : "x 1000 EUR"}}</h4>
         </div>
         <detail-plot v-if="provinceRegions" class="flex w-full h-52"
           :activeFeature="activeFeature"

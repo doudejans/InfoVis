@@ -63,20 +63,25 @@ export default {
             const vm = this;
             
             var data = this.wealthNetherlands[[this.activeFeature]];
+            var regionalData = [];
             if (this.activeRegion && this.activeRegion.includes("GM")) {
-                data = this.groupedFeaturesMunicipalities[[this.activeFeature]];
-                data = data.filter(r => r.RegioS == this.activeRegion);
+                regionalData = this.groupedFeaturesMunicipalities[[this.activeFeature]];
+                regionalData = regionalData.filter(r => r.RegioS == this.activeRegion);
             } else if (this.activeRegion && this.activeRegion.includes("PV")) {
-                data = this.groupedFeaturesProvinces[[this.activeFeature]];
-                data = data.filter(r => r.RegioS == this.activeRegion);
+                regionalData = this.groupedFeaturesProvinces[[this.activeFeature]];
+                regionalData = regionalData.filter(r => r.RegioS == this.activeRegion);
             }
 
             var x = d3.scaleTime()
                 .domain([new Date(2010, 12), new Date(2019, 1)])
                 .range([this.margin.left, this.width - this.margin.right]);
 
-            const min = d3.min(data, f => +vm.getCurrentStatisticValue(f));
-            const max = d3.max(data, f => +vm.getCurrentStatisticValue(f));
+            var min = Math.min(0, d3.min(data, f => +vm.getCurrentStatisticValue(f)));
+            var max = Math.max(0, d3.max(data, f => +vm.getCurrentStatisticValue(f)));
+            if (regionalData.length > 0) {
+                min = Math.min(min, d3.min(regionalData, f => +vm.getCurrentStatisticValue(f)));
+                max = Math.max(max, d3.max(regionalData, f => +vm.getCurrentStatisticValue(f)));
+            }
 
             var y = d3.scaleLinear()
                 .domain([min, max])
@@ -99,11 +104,19 @@ export default {
                     .attr("x1", this.margin.left)
                     .attr("x2", this.width - this.margin.right)
                     .attr("y1", function(d){ return y(d);})
-                    .attr("y2", function(d){ return y(d);});
+                    .attr("y2", function(d){ return y(d);})
+
+            this.svg.selectAll("line.horizontalGrid").data(y.ticks()).enter()
+                .append("line")
+                    .attr("class", "grid-emph")
+                    .attr("x1", this.margin.left)
+                    .attr("x2", this.width - this.margin.right)
+                    .attr("y1", y(0))
+                    .attr("y2", y(0));
 
             this.svg.append("path")
                 .datum(data)
-                .attr("class", "plotline")
+                .attr("class", "nl-line")
                 .attr("d", d3.line()
                     .curve(d3.curveCatmullRom.alpha(0.1))
                     .x(function(d) { return x(new Date(d.Perioden.slice(0, -4))) })
@@ -114,19 +127,42 @@ export default {
                 .data(data)
                 .enter()
                 .append("circle")
-                    .attr("stroke", "#1E40AF")
-                    .attr("fill", "white")
+                    .attr("class", "nl-line-dots")
                     .attr("cx", function(d) { return x(new Date(d.Perioden.slice(0, -4))) })
                     .attr("cy", function(d) { return y(vm.getCurrentStatisticValue(d)) })
                     .attr("r", 4)
+
+            if (regionalData.length > 0) {
+                this.svg.append("path")
+                .datum(regionalData)
+                .attr("class", "alt-line")
+                .attr("d", d3.line()
+                    .curve(d3.curveCatmullRom.alpha(0.1))
+                    .x(function(d) { return x(new Date(d.Perioden.slice(0, -4))) })
+                    .y(function(d) { return y(vm.getCurrentStatisticValue(d)) })
+                    );
+            
+            this.svg.selectAll("dots")
+                .data(regionalData)
+                .enter()
+                .append("circle")
+                    .attr("class", "alt-line-dots")
+                    .attr("cx", function(d) { return x(new Date(d.Perioden.slice(0, -4))) })
+                    .attr("cy", function(d) { return y(vm.getCurrentStatisticValue(d)) })
+                    .attr("r", 4)
+            }
             
             this.fillActiveYear();
         },
         fillActiveYear() {
             const vm = this;
             this.svg.selectAll("circle")
-                .attr("fill", function(d) {
-                    return d.Perioden == vm.activeYear + "JJ00" ? "white" : "#1E40AF";
+                .attr("class", function(d) {
+                    var classes = d.RegioType == "Country" ? "nl-line-dots" : "alt-line-dots";
+                    if (d.Perioden == vm.activeYear + "JJ00") {
+                        classes += " active-dots";
+                    }
+                    return classes;
                 });
         },
         redraw() {
@@ -163,10 +199,28 @@ export default {
     @apply text-sm text-gray-500;
 }
 
-.plotline {
+.active-dots {
+    fill: white !important;
+}
+
+.nl-line {
     fill: none;
-    stroke: #1E40AF;
     stroke-width: 3;
+    @apply stroke-current text-blue-800;
+}
+
+.nl-line-dots {
+    @apply fill-current stroke-current text-blue-800;
+}
+
+.alt-line {
+    fill: none;
+    stroke-width: 3;
+    @apply stroke-current text-red-800;
+}
+
+.alt-line-dots {
+    @apply fill-current stroke-current text-red-800;
 }
 
 .grid {
@@ -175,6 +229,13 @@ export default {
     stroke-dasharray: 2px;
 
     @apply stroke-1 stroke-current text-gray-300;
+}
+
+.grid-emph {
+    fill: none;
+    shape-rendering: crispEdges;
+
+    @apply stroke-1 stroke-current text-gray-400;
 }
 
 .tick line {
