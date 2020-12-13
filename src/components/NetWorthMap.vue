@@ -269,6 +269,7 @@ export default {
 #map {
   stroke: #FFF;
   stroke-width: 0.2px;
+  cursor: pointer;
 }
 
 #legend-title {
