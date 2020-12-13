@@ -75,16 +75,19 @@ export default {
             var x = d3.scaleTime()
                 .domain([new Date(2010, 12), new Date(2019, 1)])
                 .range([this.margin.left, this.width - this.margin.right]);
-
             var min = Math.min(0, d3.min(data, f => +vm.getCurrentStatisticValue(f)));
             var max = Math.max(0, d3.max(data, f => +vm.getCurrentStatisticValue(f)));
             if (regionalData.length > 0) {
-                min = Math.min(min, d3.min(regionalData, f => +vm.getCurrentStatisticValue(f)));
-                max = Math.max(max, d3.max(regionalData, f => +vm.getCurrentStatisticValue(f)));
+                var minRegional = d3.min(regionalData, f => +vm.getCurrentStatisticValue(f));
+                var maxRegional = d3.max(regionalData, f => +vm.getCurrentStatisticValue(f));
+                if (!isNaN(minRegional) && !isNaN(maxRegional)) {
+                    min = Math.min(min, minRegional);
+                    max = Math.max(max, maxRegional);
+                }
             }
 
             var y = d3.scaleLinear()
-                .domain([min, max])
+                .domain([min, max]).nice()
                 .range([this.height - this.margin.bottom, this.margin.top]);
 
             this.svg.append("g")
@@ -118,7 +121,6 @@ export default {
                 .datum(data)
                 .attr("class", "nl-line")
                 .attr("d", d3.line()
-                    .curve(d3.curveCatmullRom.alpha(0.1))
                     .x(function(d) { return x(new Date(d.Perioden.slice(0, -4))) })
                     .y(function(d) { return y(vm.getCurrentStatisticValue(d)) })
                     );
@@ -133,23 +135,30 @@ export default {
                     .attr("r", 4)
 
             if (regionalData.length > 0) {
-                this.svg.append("path")
-                .datum(regionalData)
-                .attr("class", "alt-line")
-                .attr("d", d3.line()
-                    .curve(d3.curveCatmullRom.alpha(0.1))
+                var line = d3.line()
+                    .defined(d => !isNaN(vm.getCurrentStatisticValue(d)))
                     .x(function(d) { return x(new Date(d.Perioden.slice(0, -4))) })
-                    .y(function(d) { return y(vm.getCurrentStatisticValue(d)) })
-                    );
-            
-            this.svg.selectAll("dots")
-                .data(regionalData)
-                .enter()
-                .append("circle")
-                    .attr("class", "alt-line-dots")
-                    .attr("cx", function(d) { return x(new Date(d.Perioden.slice(0, -4))) })
-                    .attr("cy", function(d) { return y(vm.getCurrentStatisticValue(d)) })
-                    .attr("r", 4)
+                    .y(function(d) { return y(vm.getCurrentStatisticValue(d)) });
+
+                this.svg.append("path")
+                    .datum(regionalData.filter(line.defined()))
+                    .attr("class", "alt-line")
+                    .attr("stroke-dasharray", "4px")
+                    .attr("d", line);
+                
+                this.svg.append("path")
+                    .datum(regionalData)
+                    .attr("class", "alt-line")
+                    .attr("d", line);
+                
+                this.svg.selectAll("dots")
+                    .data(regionalData.filter(d => !isNaN(vm.getCurrentStatisticValue(d))))
+                    .enter()
+                    .append("circle")
+                        .attr("class", "alt-line-dots")
+                        .attr("cx", function(d) { return x(new Date(d.Perioden.slice(0, -4))) })
+                        .attr("cy", function(d) { return y(vm.getCurrentStatisticValue(d)) })
+                        .attr("r", 4)
             }
             
             this.fillActiveYear();
