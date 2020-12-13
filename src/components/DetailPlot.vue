@@ -77,6 +77,7 @@ export default {
             d3.select("#plot").select("svg").selectAll("*").remove();
             const vm = this;
             
+            // Prepare the national data and optionally prepare the regional data
             var data = this.wealthNetherlands[[this.activeFeature]];
             var regionalData = [];
             if (this.activeRegion && this.activeRegion.includes("GM")) {
@@ -87,9 +88,11 @@ export default {
                 regionalData = regionalData.filter(r => r.RegioS == this.activeRegion);
             }
 
+            // Set the scales of the axes
             var x = d3.scaleTime()
                 .domain([new Date(2010, 12), new Date(2019, 1)])
                 .range([this.margin.left, this.width - this.margin.right]);
+            
             var min = Math.min(0, d3.min(data, f => +vm.getCurrentStatisticValue(f)));
             var max = Math.max(0, d3.max(data, f => +vm.getCurrentStatisticValue(f)));
             if (regionalData.length > 0) {
@@ -105,6 +108,7 @@ export default {
                 .domain([min, max]).nice()
                 .range([this.height - this.margin.bottom, this.margin.top]);
 
+            // Draw the axes
             this.svg.append("g")
                 .attr("transform", `translate(0,${this.height - this.margin.bottom})`)
                 .call(d3.axisBottom(x))
@@ -116,6 +120,7 @@ export default {
                     .tickSizeInner(10))
                 .select(".domain").remove();
             
+            // Draw the grid
             this.svg.selectAll("line.horizontalGrid").data(y.ticks()).enter()
                 .append("line")
                     .attr("class", "grid")
@@ -132,6 +137,7 @@ export default {
                     .attr("y1", y(0))
                     .attr("y2", y(0));
 
+            // Draw the line and dots for the national data
             this.svg.append("path")
                 .datum(data)
                 .attr("class", "nl-line")
@@ -158,6 +164,7 @@ export default {
                         this.tooltipVisible = false;
                     });
 
+            // Optionally draw the line and dots for the regional data
             if (regionalData.length > 0) {
                 var line = d3.line()
                     .defined(d => !isNaN(vm.getCurrentStatisticValue(d)))
