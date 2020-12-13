@@ -91,6 +91,7 @@ export default {
                 .attr("height", height)
                 .on('click', function(r) {
                     vm.$emit('switchRegion', null);
+                    vm.setStrokeRegion(null);
                 });
 
             var geoRegions = municipalityMap ? this.municipalityRegions : this.provinceRegions;
@@ -159,6 +160,7 @@ export default {
                 .on('click', function(r) {
                     vm.$emit('switchRegion', r.srcElement.__data__.id);
                     r.stopPropagation();
+                    vm.setStrokeRegion(r.srcElement.__data__.id);
                 });
 
             this.drawLegend(colorScale)
@@ -229,6 +231,17 @@ export default {
         },
         setTooltipHeight(height) {
             this.tooltipHeight = height;
+        },
+        setStrokeRegion(regionId) {
+            this.svg.selectAll(".region")
+                .attr("stroke", "white")
+                .attr("stroke-width", 0.2);
+            if (regionId) {
+                this.svg.select("." + regionId)
+                    .attr("stroke", "red")
+                    .attr("stroke-width", 3)
+                    .raise();
+            }
         }
     },
     async mounted() {
@@ -273,6 +286,4 @@ export default {
 #legend-axis .tick text {
    color: #333;
 }
-
-
 </style>
