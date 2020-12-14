@@ -24,11 +24,11 @@
             <ul>
                 <li v-for="(value, name) in features" :key="name">
                     <a class="flex p-1 text-sm font-semibold text-gray-600 hover:bg-gray-50 rounded-md cursor-pointer select-none duration-200 ease-in-out"
-                        @click="this.opened[name] = !this.opened[name]"
+                        @click="openedGroup = name"
                     >
                         {{name}}
                     </a>
-                    <ul v-if="this.opened[name]">
+                    <ul v-if="openedGroup == name || value.find(v => v.Key == activeFeature)">
                         <li v-for="row in value" :key="row.Key">
                             <a class="flex ml-4 p-1 text-sm font-medium text-gray-500 hover:bg-gray-50 rounded-md cursor-pointer select-none duration-200 ease-in-out"
                                 :class="{active: activeFeature == row.Key}"
@@ -58,8 +58,8 @@ export default {
     data() {
         return {
             features: {},
-            opened: {},
-            yearInterval: null
+            yearInterval: null,
+            openedGroup: "",
         }
     },
     computed: {
@@ -94,9 +94,6 @@ export default {
         const parsed_csv = await d3.csv("metadata_kenmerken_en.csv");
 
         this.features = groupBy(parsed_csv, r => [r.Category]);
-        Object.keys(this.features).forEach(key => {
-            this.opened[key] = false;
-        });
     }
 }
 </script>
