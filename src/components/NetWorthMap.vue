@@ -83,11 +83,16 @@ export default {
         initMap(municipalityMap) {
             this.svg = d3.select("#map").select("svg");
             const box = d3.select("#map").node();
+            const vm = this;
 
             const width = box.getBoundingClientRect().width,
                 height = box.getBoundingClientRect().height;
             this.svg.attr("width", width)
-                .attr("height", height);
+                .attr("height", height)
+                .on('click', function(r) {
+                    vm.$emit('switchRegion', null);
+                    vm.setStrokeRegion(null);
+                });
 
             var geoRegions = municipalityMap ? this.municipalityRegions : this.provinceRegions;
 
@@ -151,6 +156,11 @@ export default {
                 })
                 .on('mouseout', function(r) {
                     vm.hideTooltip();
+                })
+                .on('click', function(r) {
+                    vm.$emit('switchRegion', r.srcElement.__data__.id);
+                    r.stopPropagation();
+                    vm.setStrokeRegion(r.srcElement.__data__.id);
                 });
 
             this.drawLegend(colorScale)
@@ -221,6 +231,17 @@ export default {
         },
         setTooltipHeight(height) {
             this.tooltipHeight = height;
+        },
+        setStrokeRegion(regionId) {
+            this.svg.selectAll(".region")
+                .attr("stroke", "white")
+                .attr("stroke-width", 0.2);
+            if (regionId) {
+                this.svg.select("." + regionId)
+                    .attr("stroke", "red")
+                    .attr("stroke-width", 3)
+                    .raise();
+            }
         }
     },
     async mounted() {
@@ -248,6 +269,7 @@ export default {
 #map {
   stroke: #FFF;
   stroke-width: 0.2px;
+  cursor: pointer;
 }
 
 #legend-title {
@@ -265,6 +287,4 @@ export default {
 #legend-axis .tick text {
    color: #333;
 }
-
-
 </style>
