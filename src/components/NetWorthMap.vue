@@ -22,6 +22,7 @@
 <script>
 import * as d3 from "d3";
 import {groupBy, range} from "lodash";
+import { legendColor } from 'd3-svg-legend'
 
 import NetWorthMapTooltip from "./NetWorthMapTooltip.vue";
 
@@ -44,6 +45,7 @@ export default {
         groupedFeaturesProvinces: Object,
         municipalityRegions: Object,
         provinceRegions: Object,
+        quantileScale: Boolean
     },
     components: {
         NetWorthMapTooltip
@@ -120,18 +122,6 @@ export default {
             const legendWrapper = this.svg.append("g")
                 .attr("id", "legend-wrapper")
                 .attr("transform", "translate(0,20)");
-
-            legendWrapper.append("rect")
-                .attr("id", "legend-rect")
-                .attr("y", 15);
-
-            legendWrapper.append("text")
-                .attr("id", "legend-title")
-                .attr("y", 0);
-
-            legendWrapper.append("g")
-                .attr("id", "legend-axis")
-                .attr("transform", "translate(0,15)");
         },
         fillMap(municipalityMap, activeStatistic, activeFeature, activeYear) {
             const vm = this;
@@ -140,9 +130,12 @@ export default {
             var features = municipalityMap ? this.groupedFeaturesMunicipalities : this.groupedFeaturesProvinces;
 
             const activeYearNetWorth = this.data[[activeYear + "JJ00", activeFeature]];
+            const multiYearData = features[activeFeature].map(f => parseFloat(vm.getCurrentStatisticValue(f)));
 
-            const extent = d3.extent(features[activeFeature], f => parseFloat(vm.getCurrentStatisticValue(f)));
-            const colorScale = d3.scaleSequential(d3.interpolateViridis).domain(extent);
+            const domain = this.quantileScale ? multiYearData : d3.extent(multiYearData);
+
+            const colorScale = d3.scaleQuantile().domain(domain)
+                .range(d3.schemeGnBu[8]);
 
             const map = new Map(activeYearNetWorth.map(row => [row.RegioS, row]))
 
@@ -173,30 +166,14 @@ export default {
             }
         },
         drawLegend(colorScale) {
-            this.svg.select("#linear-gradient").selectAll("stop").remove();
-            this.svg.select("#linear-gradient").selectAll("stop")
-                .data(colorScale.ticks().reverse().map((t, i, n) => ({ offset: `${100*i/n.length}%`, color: colorScale(t) })))
-                .enter().append("stop")
-                .attr("offset", d => d.offset)
-                .attr("stop-color", d => d.color);
-            
-            this.svg.select("#legend-rect")
-                .attr("width", 12)
-                .attr("height", 200)
-                .style("fill", "url(#linear-gradient)");
-            
-            const axis = d3.axisRight(d3.scaleLinear().domain(colorScale.domain()).range([200, 0]))
-                .ticks(5)
-                .tickSize(12)
-                .tickPadding(8);
-
-            this.svg.select("#legend-axis")
-                .call(axis);
-
             const unit = this.activeStatistic == 'total' ? 'billions' : 'thousands'
-
-            this.svg.select("#legend-title")
-                .text(this.activeStatistic.capitalize() + " wealth in " + unit);
+            const legend = legendColor()
+                .labelFormat(d3.format(".1f"))
+                .title(this.activeStatistic.capitalize() + " wealth in " + unit)
+                .scale(colorScale)
+                .shapePadding(1)
+                .shapeHeight(25);
+            d3.select("#legend-wrapper").call(legend);
         },
         redraw() {
             d3.select("#map").select("svg").selectAll("*").remove();
@@ -234,7 +211,7 @@ export default {
         },
         setStrokeRegion(regionId) {
             this.svg.selectAll(".region")
-                .attr("stroke", "white")
+                .attr("stroke", "#333")
                 .attr("stroke-width", 0.2);
             if (regionId) {
                 this.svg.select("." + regionId)
@@ -259,7 +236,10 @@ export default {
             this.fillMap(this.municipalityMap, this.activeStatistic, this.activeFeature, this.activeYear);
         },
         activeYear: function() {
-            this.fillMap(this.municipalityMap, this.activeStatistic, this.activeFeature, this.activeYear)
+            this.fillMap(this.municipalityMap, this.activeStatistic, this.activeFeature, this.activeYear);
+        },
+        quantileScale: function() {
+            this.fillMap(this.municipalityMap, this.activeStatistic, this.activeFeature, this.activeYear);
         }
     }
 }
@@ -267,24 +247,20 @@ export default {
 
 <style>
 #map {
-  stroke: #FFF;
-  stroke-width: 0.2px;
+  stroke: #333;
+  stroke-width: 0.3px;
   cursor: pointer;
 }
 
-#legend-title {
-    @apply font-bold text-xs;
+#legend-wrapper .label {
+    @apply text-xs;
 }
 
-#legend-axis .tick line {
-    color: white;
-}
-
-#legend-axis path {
+#legend-wrapper .swatch {
     stroke: none;
 }
 
-#legend-axis .tick text {
-   color: #333;
+#legend-wrapper .legendTitle {
+    @apply font-bold text-xs;
 }
 </style>

@@ -15,6 +15,7 @@
         :groupedFeaturesProvinces="groupedFeaturesProvinces"
         :municipalityRegions="municipalityRegions"
         :provinceRegions="provinceRegions"
+        :quantileScale="quantileScale"
         @switchRegion="switchRegion"/>
 
       <div class="w-1/3 ml-2 mb-2">
@@ -41,10 +42,12 @@
           :activeStatistic="activeStatistic"
           :activeFeature="activeFeature"
           :activeYear="activeYear"
+          :quantileScale="quantileScale"
           @switchMap="switchMap"
           @switchStatistic="switchStatistic"
           @switchFeature="switchFeature"
-          @switchYear="switchYear"/>
+          @switchYear="switchYear"
+          @switchScale="switchScale"/>
       </div>
     </div>
   </div>
@@ -81,6 +84,7 @@ export default {
       groupedFeaturesProvinces: null,
       municipalityRegions: null,
       provinceRegions: null,
+      quantileScale: true
     }
   },
   async mounted() {
@@ -112,6 +116,9 @@ export default {
     },
     switchRegion(regionId) {
       this.activeRegion = regionId;
+    },
+    switchScale(quantileScale) {
+      this.quantileScale = quantileScale;
     },
     getRegionName(regionId) {
       if (!regionId) {

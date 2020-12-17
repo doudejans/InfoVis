@@ -1,9 +1,17 @@
 <template>
     <div class="justify-items-center">
         <h2 class="text-xl font-serif mb-2">Visualization options</h2>
+
+        <div class="flex justify-between items-center space-x-2 my-2">
+            <a v-if="!this.yearInterval" class="flex w-7 text-2xl text-blue-800 hover:text-blue-700 cursor-pointer select-none duration-200 ease-in-out" @click="loopYears(true)">▶</a>
+            <a v-if="this.yearInterval" class="flex w-7 text-2xl text-blue-800 hover:text-blue-700 cursor-pointer select-none duration-200 ease-in-out" @click="loopYears(false)">■</a>
+            <input type="range" min="2011" max="2019" v-bind:value="activeYear" class="w-full" @input="setActiveYear($event)">
+            <span class="flex w-12 text-sm font-medium text-gray-500">{{activeYear}}</span>
+        </div>
+
         <div class="flex justify-center my-2">
-            <a class="button-group leftmost " :class="{ active: municipalityMap }" @click="toggleMunicipalityMap(true)">Municipalities</a>
-            <a class="button-group rightmost " :class="{ active: !municipalityMap }" @click="toggleMunicipalityMap(false)">Provinces</a>
+            <a class="button-group leftmost" :class="{ active: municipalityMap }" @click="toggleMunicipalityMap(true)">Municipalities</a>
+            <a class="button-group rightmost" :class="{ active: !municipalityMap }" @click="toggleMunicipalityMap(false)">Provinces</a>
         </div>
 
         <div class="flex justify-center my-2">
@@ -12,11 +20,9 @@
             <a class="button-group rightmost" :class="{ active: activeStatistic == 'total' }" @click="setActiveStatistic('total')">Total</a>
         </div>
 
-        <div class="flex justify-between items-center space-x-2 my-2">
-            <a v-if="!this.yearInterval" class="flex w-7 text-2xl text-blue-800 hover:text-blue-700 cursor-pointer select-none duration-200 ease-in-out" @click="loopYears(true)">▶</a>
-            <a v-if="this.yearInterval" class="flex w-7 text-2xl text-blue-800 hover:text-blue-700 cursor-pointer select-none duration-200 ease-in-out" @click="loopYears(false)">■</a>
-            <input type="range" min="2011" max="2019" v-bind:value="activeYear" class="w-full" @input="setActiveYear($event)">
-            <span class="flex w-12 text-sm font-medium text-gray-500">{{activeYear}}</span>
+        <div class="flex justify-center my-2">
+            <a class="button-group leftmost" :class="{ active: quantileScale }" @click="toggleQuantileScale(true)">Quantile color scale</a>
+            <a class="button-group rightmost" :class="{ active: !quantileScale }" @click="toggleQuantileScale(false)">Linear color scale</a>
         </div>
 
         <h2 class="text-xl font-serif mt-4">Features</h2>
@@ -53,7 +59,8 @@ export default {
         municipalityMap: Boolean,
         activeStatistic: String,
         activeFeature: String,
-        activeYear: Number
+        activeYear: Number,
+        quantileScale: Boolean,
     },
     data() {
         return {
@@ -76,6 +83,9 @@ export default {
         },
         setActiveYear(event) {
             this.$emit('switchYear', event.target.value);
+        },
+        toggleQuantileScale(quantileScale) {
+            this.$emit('switchScale', quantileScale);
         },
         loopYears(start) {
             if(start && !this.yearInterval) {
