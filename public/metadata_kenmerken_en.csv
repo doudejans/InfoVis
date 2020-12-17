@@ -1,0 +1,189 @@
+Key,Category,Title,Description
+1013400,Primary source of income,Income as employee,Huishoudens waarvoor het loon van werknemer de voornaamste inkomensbron vormt.
+1013601,Primary source of income,Income as self-employed,"Huishoudens waarvoor het inkomen als zelfstandig ondernemer, directeur-grootaandeelhouder en overig zelfstandige de voornaamste inkomensbron vormt."
+1013650,Primary source of income,Transfer income,"Huishoudens waarvoor een uitkering, pensioen of studiefinanciering de voornaamste inkomensbron vormt."
+1013700,Primary source of income,Social security: income insurance,"Huishoudens waarvoor een uitkering inkomensverzekering wegens werkloosheid, ziekte, arbeidsongeschiktheid en pensioen de voornaamste inkomensbron vormt."
+1013750,Primary source of income,Social security: unemployment,Huishoudens waarvoor een uitkering inkomensverzekering wegens werkloosheid de voornaamste inkomensbron vormt.
+1013800,Primary source of income,Social security: incapacity to work,Huishoudens waarvoor een uitkering inkomensverzekering wegens ziekte of arbeidsongeschiktheid de voornaamste inkomensbron vormt.
+1013850,Primary source of income,Social security: pension,Huishoudens waarvoor een uitkering inkomensverzekering wegens pensioen of inkomen uit vermogen de voornaamste inkomensbron vormt.
+1013900,Primary source of income,Social security: social protection benefits,Huishoudens waarvoor een uitkering sociale voorziening (bijstand en overige uitkering sociale voorziening) de voornaamste inkomensbron vormt.
+1014050,Primary source of income,Student grants,Huishoudens waarvoor studiefinanciering de voornaamste inkomensbron vormt.
+1014752,Standardised income 20% groups,1st 20%-group,"Het gestandaardiseerd inkomen is het besteedbaar inkomen gecorrigeerd voor verschillen in grootte en samenstelling van het huishouden.
+
+De huishoudens zijn naar hoogte van hun gestandaardiseerd inkomen in vijf groepen (kwintielen) met een gelijk aantal huishoudens verdeeld. De inkomensgrenzen tussen deze vijf 20%-groepen verschillen van jaar tot jaar."
+1014753,Standardised income 20% groups,2nd 20%-group,"Het gestandaardiseerd inkomen is het besteedbaar inkomen gecorrigeerd voor verschillen in grootte en samenstelling van het huishouden.
+
+De huishoudens zijn naar hoogte van hun gestandaardiseerd inkomen in vijf groepen (kwintielen) met een gelijk aantal huishoudens verdeeld. De inkomensgrenzen tussen deze vijf 20%-groepen verschillen van jaar tot jaar."
+1014754,Standardised income 20% groups,3rd 20%-group,"Het gestandaardiseerd inkomen is het besteedbaar inkomen gecorrigeerd voor verschillen in grootte en samenstelling van het huishouden.
+
+De huishoudens zijn naar hoogte van hun gestandaardiseerd inkomen in vijf groepen (kwintielen) met een gelijk aantal huishoudens verdeeld. De inkomensgrenzen tussen deze vijf 20%-groepen verschillen van jaar tot jaar."
+1014755,Standardised income 20% groups,4th 20%-group,"Het gestandaardiseerd inkomen is het besteedbaar inkomen gecorrigeerd voor verschillen in grootte en samenstelling van het huishouden.
+
+De huishoudens zijn naar hoogte van hun gestandaardiseerd inkomen in vijf groepen (kwintielen) met een gelijk aantal huishoudens verdeeld. De inkomensgrenzen tussen deze vijf 20%-groepen verschillen van jaar tot jaar."
+1014756,Standardised income 20% groups,5th 20%-group,"Het gestandaardiseerd inkomen is het besteedbaar inkomen gecorrigeerd voor verschillen in grootte en samenstelling van het huishouden.
+
+De huishoudens zijn naar hoogte van hun gestandaardiseerd inkomen in vijf groepen (kwintielen) met een gelijk aantal huishoudens verdeeld. De inkomensgrenzen tussen deze vijf 20%-groepen verschillen van jaar tot jaar."
+1014800,Home ownership,Own house,"Een huishouden woont in een eigen woning of in een gehuurde woning. Van de huishoudens die een woning huren, is bepaald of zij wel of geen huurtoeslag ontvangen hebben.
+"
+1014850,Home ownership,Rental house,"Een huishouden woont in een eigen woning of in een gehuurde woning. Van de huishoudens die een woning huren, is bepaald of zij wel of geen huurtoeslag ontvangen hebben.
+"
+1014900,Home ownership,Rental house with rent allowance,"Een huishouden woont in een eigen woning of in een gehuurde woning. Van de huishoudens die een woning huren, is bepaald of zij wel of geen huurtoeslag ontvangen hebben."
+1014950,Home ownership,Rental house without rent allowance,"Een huishouden woont in een eigen woning of in een gehuurde woning. Van de huishoudens die een woning huren, is bepaald of zij wel of geen huurtoeslag ontvangen hebben.
+"
+1016010,Household composition,Multi-person household,Een particulier huishouden bestaande uit twee of meer personen.
+1016090,Household composition,Couple with children,"Meerpersoonshuishouden bestaande uit een paar met (een) thuiswonend(e) kind(eren)
+
+
+
+Meerpersoonshuishouden:
+
+Een particulier huishouden bestaande uit twee of meer personen.
+
+
+
+Paar:
+
+Twee op basis van huwelijk, partnerschapsregistratie of samenwoonrelatie bij elkaar behorende personen.
+
+
+
+Thuiswonend kind:
+
+Persoon ongeacht leeftijd of burgerlijke staat die een kind-ouder relatie heeft met één of twee tot het huishouden behorende ouders.
+
+Onder thuiswonende kinderen worden ook begrepen adoptie- en stiefkinderen maar geen pleegkinderen."
+1017780,Household composition,Couple without children,"Meerpersoonshuishouden bestaande uit een paar zonder thuiswonend(e) kind(eren)
+
+
+
+Meerpersoonshuishouden:
+
+Een particulier huishouden bestaande uit twee of meer personen.
+
+
+
+Paar:
+
+Twee op basis van huwelijk, partnerschapsregistratie of samenwoonrelatie bij elkaar behorende personen.
+
+
+
+Thuiswonend kind:
+
+Persoon ongeacht leeftijd of burgerlijke staat die een kind-ouder relatie heeft met één of twee tot het huishouden behorende ouders.
+
+Onder thuiswonende kinderen worden ook begrepen adoptie- en stiefkinderen maar geen pleegkinderen."
+1021200,Wealth 20% groups,1st 20%-group,"Vermogen is het saldo van bezittingen en schulden. 
+
+De bezittingen bestaan vooral uit banktegoeden, effecten, onroerend goed (waaronder de eigen woning) en ondernemingsvermogen. De schulden omvatten onder meer de schuld ten behoeve van een eigen woning en consumptief krediet.
+De huishoudens zijn naar hoogte van hun vermogen in vijf groepen (kwintielen) met een gelijk aantal huishoudens verdeeld. De vermogensgrenzen tussen deze vijf 20%-groepen verschillen van jaar tot jaar."
+1021210,Wealth 20% groups,2nd 20%-group,"Vermogen is het saldo van bezittingen en schulden. 
+
+De bezittingen bestaan vooral uit banktegoeden, effecten, onroerend goed (waaronder de eigen woning) en ondernemingsvermogen. De schulden omvatten onder meer de schuld ten behoeve van een eigen woning en consumptief krediet.
+De huishoudens zijn naar hoogte van hun vermogen in vijf groepen (kwintielen) met een gelijk aantal huishoudens verdeeld. De vermogensgrenzen tussen deze vijf 20%-groepen verschillen van jaar tot jaar."
+1021220,Wealth 20% groups,3rd 20%-group,"Vermogen is het saldo van bezittingen en schulden. 
+
+De bezittingen bestaan vooral uit banktegoeden, effecten, onroerend goed (waaronder de eigen woning) en ondernemingsvermogen. De schulden omvatten onder meer de schuld ten behoeve van een eigen woning en consumptief krediet.
+De huishoudens zijn naar hoogte van hun vermogen in vijf groepen (kwintielen) met een gelijk aantal huishoudens verdeeld. De vermogensgrenzen tussen deze vijf 20%-groepen verschillen van jaar tot jaar."
+1021230,Wealth 20% groups,4th 20%-group,"Vermogen is het saldo van bezittingen en schulden. 
+
+De bezittingen bestaan vooral uit banktegoeden, effecten, onroerend goed (waaronder de eigen woning) en ondernemingsvermogen. De schulden omvatten onder meer de schuld ten behoeve van een eigen woning en consumptief krediet.
+De huishoudens zijn naar hoogte van hun vermogen in vijf groepen (kwintielen) met een gelijk aantal huishoudens verdeeld. De vermogensgrenzen tussen deze vijf 20%-groepen verschillen van jaar tot jaar."
+1021240,Wealth 20% groups,5th 20%-group,"Vermogen is het saldo van bezittingen en schulden. 
+
+De bezittingen bestaan vooral uit banktegoeden, effecten, onroerend goed (waaronder de eigen woning) en ondernemingsvermogen. De schulden omvatten onder meer de schuld ten behoeve van een eigen woning en consumptief krediet.
+De huishoudens zijn naar hoogte van hun vermogen in vijf groepen (kwintielen) met een gelijk aantal huishoudens verdeeld. De vermogensgrenzen tussen deze vijf 20%-groepen verschillen van jaar tot jaar."
+1021320,Wealth classes,5 000 to 10 000 euro,"Vermogen is het saldo van bezittingen en schulden. 
+
+De bezittingen bestaan vooral uit banktegoeden, effecten, onroerend goed (waaronder de eigen woning) en ondernemingsvermogen. De schulden omvatten onder meer de schuld ten behoeve van een eigen woning en consumptief krediet."
+1021330,Wealth classes,10 000 to 20 000 euros,"Vermogen is het saldo van bezittingen en schulden. 
+
+De bezittingen bestaan vooral uit banktegoeden, effecten, onroerend goed (waaronder de eigen woning) en ondernemingsvermogen. De schulden omvatten onder meer de schuld ten behoeve van een eigen woning en consumptief krediet."
+1021340,Wealth classes,20 000 to 50 000 euros,"Vermogen is het saldo van bezittingen en schulden. 
+
+De bezittingen bestaan vooral uit banktegoeden, effecten, onroerend goed (waaronder de eigen woning) en ondernemingsvermogen. De schulden omvatten onder meer de schuld ten behoeve van een eigen woning en consumptief krediet."
+1021350,Wealth classes,50 000 to 100 000 euros,"Vermogen is het saldo van bezittingen en schulden. 
+
+De bezittingen bestaan vooral uit banktegoeden, effecten, onroerend goed (waaronder de eigen woning) en ondernemingsvermogen. De schulden omvatten onder meer de schuld ten behoeve van een eigen woning en consumptief krediet."
+1021360,Wealth classes,100 000 to 200 000 euros,"Vermogen is het saldo van bezittingen en schulden. 
+
+De bezittingen bestaan vooral uit banktegoeden, effecten, onroerend goed (waaronder de eigen woning) en ondernemingsvermogen. De schulden omvatten onder meer de schuld ten behoeve van een eigen woning en consumptief krediet."
+1021370,Wealth classes,200 000 to 500 000 euros,"Vermogen is het saldo van bezittingen en schulden. 
+
+De bezittingen bestaan vooral uit banktegoeden, effecten, onroerend goed (waaronder de eigen woning) en ondernemingsvermogen. De schulden omvatten onder meer de schuld ten behoeve van een eigen woning en consumptief krediet."
+1021380,Wealth classes,500 000 to 1 million euros,"Vermogen is het saldo van bezittingen en schulden. 
+
+De bezittingen bestaan vooral uit banktegoeden, effecten, onroerend goed (waaronder de eigen woning) en ondernemingsvermogen. De schulden omvatten onder meer de schuld ten behoeve van een eigen woning en consumptief krediet."
+1021390,Wealth classes,1 million euros or more,"Vermogen is het saldo van bezittingen en schulden. 
+
+De bezittingen bestaan vooral uit banktegoeden, effecten, onroerend goed (waaronder de eigen woning) en ondernemingsvermogen. De schulden omvatten onder meer de schuld ten behoeve van een eigen woning en consumptief krediet."
+1050010,Total,Private households,"Eén of meer personen die samen een woonruimte bewonen en zichzelf, dus niet-bedrijfsmatig, voorzien in de dagelijkse levensbehoeften."
+1050015,Household composition,Single-person household,"Particulier huishouden bestaande uit één persoon.
+
+Tot eenpersoonshuishoudens, ook wel alleenstaanden genoemd, worden ook personen gerekend die met anderen op eenzelfde adres wonen maar een eigen huishouding voeren. Alleenstaanden worden in alle burgerlijke staten aangetroffen; zo kunnen gehuwden na het stuklopen van hun relatie (in afwachting van een scheiding) alleen wonen."
+1050055,Household composition,Couple,"Meerpersoonshuishouden bestaande uit een paar met of zonder thuiswonend(e) kind(eren)
+
+
+
+Meerpersoonshuishouden:
+
+Een particulier huishouden bestaande uit twee of meer personen.
+
+
+
+Paar:
+
+Twee op basis van huwelijk, partnerschapsregistratie of samenwoonrelatie bij elkaar behorende personen.
+
+
+
+Thuiswonend kind:
+
+Persoon ongeacht leeftijd of burgerlijke staat die een kind-ouder relatie heeft met één of twee tot het huishouden behorende ouders.
+
+Onder thuiswonende kinderen worden ook begrepen adoptie- en stiefkinderen maar geen pleegkinderen."
+1050190,Household composition,Single parent family,Particulier huishouden bestaande uit één ouder met één of meer thuiswonende kinderen.
+1050220,Household composition,Multi-person household (other),"Meerpersoonshuishouden dat uitsluitend bestaat uit overige leden.
+
+
+
+Meerpersoonshuishouden:
+
+Een particulier huishouden bestaande uit twee of meer personen.
+
+
+
+Overig lid van een huishouden:
+
+Persoon die anders dan als partner, ouder in een eenouderhuishouden of als thuiswonend kind deel uitmaakt van een particulier huishouden. 
+
+Te denken valt hier bijvoorbeeld aan twee broers (zussen) die samen een huishouden vormen."
+3000874,Wealth classes,-5 000 to 0 euros,"Vermogen is het saldo van bezittingen en schulden. 
+
+De bezittingen bestaan vooral uit banktegoeden, effecten, onroerend goed (waaronder de eigen woning) en ondernemingsvermogen. De schulden omvatten onder meer de schuld ten behoeve van een eigen woning en consumptief krediet."
+3000911,Wealth classes,Up to -5 000 euros,"Vermogen is het saldo van bezittingen en schulden. 
+
+De bezittingen bestaan vooral uit banktegoeden, effecten, onroerend goed (waaronder de eigen woning) en ondernemingsvermogen. De schulden omvatten onder meer de schuld ten behoeve van een eigen woning en consumptief krediet.
+"
+3000912,Wealth classes,0 to 1 000 euros,"Vermogen is het saldo van bezittingen en schulden.
+ 
+De bezittingen bestaan vooral uit banktegoeden, effecten, onroerend goed (waaronder de eigen woning) en ondernemingsvermogen. De schulden omvatten onder meer de schuld ten behoeve van een eigen woning en consumptief krediet.
+"
+3000913,Wealth classes,1 000 to 5 000 euros,"Vermogen is het saldo van bezittingen en schulden. 
+
+De bezittingen bestaan vooral uit banktegoeden, effecten, onroerend goed (waaronder de eigen woning) en ondernemingsvermogen. De schulden omvatten onder meer de schuld ten behoeve van een eigen woning en consumptief krediet."
+A025340,Main breadwinner age, Up to 25 years,De hoofdkostwinner is de persoon in het huishouden met de belangrijkste sociaaleconomische positie.
+A025343,Main breadwinner age,25 to 45 years,De hoofdkostwinner is de persoon in het huishouden met de belangrijkste sociaaleconomische positie.
+A025351,Main breadwinner age,45 to 65 years,De hoofdkostwinner is de persoon in het huishouden met de belangrijkste sociaaleconomische positie.
+A025359,Main breadwinner age,65 years or older,De hoofdkostwinner is de persoon in het huishouden met de belangrijkste sociaaleconomische positie.
+A025362,Main breadwinner migrant background,Dutch,"Migratieachtergrond van de hoofdkostwinner: Nederland
+Persoon van wie de beide ouders in Nederland zijn geboren."
+A025363,Main breadwinner migrant background,Western,"Migratieachtergrond van de hoofdkostwinner: westers
+Persoon met als migratieachtergrond een van de landen in Europa (exclusief Turkije), Noord-Amerika en Oceanië, en Indonesië en Japan. 
+Op grond van hun sociaal- economische en sociaal-culturele positie worden personen met een migratieachtergrond uit Indonesië en Japan tot de westerse migratieachtergrond gerekend. Het gaat vooral om mensen die in het voormalig Nederlands-Indië zijn geboren en werknemers van Japanse bedrijven met hun gezin.
+Persoon met een migratieachtergond:
+Persoon van wie ten minste één ouder in het buitenland is geboren."
+A025368,Main breadwinner migrant background,Non-western,"Migratieachtergrond van de hoofdkostwinner: niet-westers 
+Persoon met als migratieachtergrond een van de landen in Afrika, Latijns-Amerika en Azië (exclusief Indonesië en Japan) of Turkije. Op grond van hun sociaal- economische en sociaal-culturele positie worden personen met een migratieachtergrond uit Indonesië en Japan tot de westerse migratieachtergrond gerekend. Het gaat vooral om mensen die in het voormalig Nederlands-Indië zijn geboren en werknemers van Japanse bedrijven met hun gezin. 
+Persoon met een migratieachtergond: Persoon van wie ten minste één ouder in het buitenland is geboren.
+"
