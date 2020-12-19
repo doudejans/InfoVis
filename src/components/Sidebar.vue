@@ -121,7 +121,7 @@ export default {
   @apply rounded-r-md;
 }
 
-.active {
+a.active {
   @apply bg-blue-800 text-white hover:bg-blue-700;
 }
 
