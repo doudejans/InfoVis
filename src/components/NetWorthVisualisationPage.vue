@@ -88,7 +88,7 @@ export default {
     }
   },
   async mounted() {
-    const municipalityTable = await d3.csv('vermogen_gemeenten_modified.csv');
+    const municipalityTable = await d3.csv('https://datavis.s3.eu-central-1.amazonaws.com/vermogen_gemeenten_modified.csv');
     this.wealthMunicipalities = groupBy(municipalityTable, w => [w.Perioden, w.KenmerkenHuishouden]);
     this.groupedFeaturesMunicipalities = groupBy(municipalityTable, w => [w.KenmerkenHuishouden]);
 
